@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#082e63">
+  <meta name="description" content="Mercado Souza: cervejas, destilados, gin, licores e energéticos. Monte seu pedido e finalize pelo WhatsApp.">
+
+  <title>Mercado Souza | Adega & Bebidas</title>
+
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <a class="skip" href="#catalogo">Pular para o catálogo</a>
+
+  <!-- Ícones vetoriais -->
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="0"
+    height="0"
+    style="position:absolute"
+    aria-hidden="true"
+  >
+    <defs>
+      <symbol id="i-bag" viewBox="0 0 24 24">
+        <path d="M5 7h14l1.2 13H3.8L5 7ZM8 8V6a4 4 0 0 1 8 0v2"/>
+      </symbol>
+
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5"/>
+        <path d="m16 16 4 4"/>
+      </symbol>
+
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14"/>
+      </symbol>
+
+      <symbol id="i-minus" viewBox="0 0 24 24">
+        <path d="M5 12h14"/>
+      </symbol>
+
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M4 12h16m-6-6 6 6-6 6"/>
+      </symbol>
+
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M18 6 6 18"/>
+      </symbol>
+
+      <symbol id="i-truck" viewBox="0 0 24 24">
+        <path d="M2 4h13v13H2V4Zm13 5h4l3 4v4h-7"/>
+        <circle cx="6" cy="18" r="2"/>
+        <circle cx="18" cy="18" r="2"/>
+      </symbol>
+
+      <symbol id="i-snow" viewBox="0 0 24 24">
+        <path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10l4-1-1-4M20 14l-4 1 1 4M7 19l1-4-4-1M17 5l-1 4 4 1"/>
+      </symbol>
+
+      <symbol id="i-wa" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          stroke="none"
+          d="M20.52 3.449A11.83 11.83 0 0 0 12.09 0C5.553 0 .236 5.317.233 11.854c0 2.088.546 4.127 1.588 5.924L.131 24l6.335-1.662a11.85 11.85 0 0 0 5.617 1.431h.005c6.535 0 11.852-5.317 11.855-11.855a11.78 11.78 0 0 0-3.423-8.465ZM12.088 21.77h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.761.987 1.004-3.668-.235-.376a9.83 9.83 0 0 1-1.51-5.267c.003-5.433 4.424-9.854 9.861-9.854a9.8 9.8 0 0 1 6.978 2.892 9.8 9.8 0 0 1 2.886 6.98c-.003 5.434-4.424 9.854-9.827 9.898Zm5.419-7.38c-.297-.149-1.759-.868-2.032-.967-.273-.1-.471-.149-.669.148-.199.298-.768.967-.942 1.165-.173.199-.347.224-.644.075-.297-.149-1.255-.463-2.391-1.477-.884-.789-1.481-1.764-1.654-2.062-.174-.298-.019-.459.13-.607.134-.133.297-.347.446-.521.148-.173.198-.297.297-.496.099-.198.05-.372-.025-.521-.074-.149-.669-1.612-.917-2.207-.241-.579-.486-.5-.669-.51l-.57-.01c-.198 0-.52.075-.793.372-.273.298-1.041 1.017-1.041 2.479 0 1.463 1.066 2.876 1.215 3.074.148.199 2.098 3.204 5.083 4.493.71.306 1.264.489 1.696.626.713.226 1.362.194 1.875.118.572-.085 1.759-.719 2.007-1.413.248-.694.248-1.289.174-1.413-.075-.124-.273-.198-.57-.347Z"
+        />
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="top">
+    <div class="wrap">
+      <span>Bebida gelada. Bons encontros.</span>
+      <span>Mercado Souza &nbsp; <b>18+</b></span>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap header">
+      <a class="logo" href="#inicio" aria-label="Mercado Souza, início">
+        <img
+          src="logo.png"
+          alt="Logo original do Mercado Souza"
+          width="176"
+          height="99"
+        >
+      </a>
+
+      <label class="search">
+        <svg fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <use href="#i-search"/>
+        </svg>
+
+        <input
+          id="search"
+          type="search"
+          placeholder="O que vai acompanhar seu momento?"
+          aria-label="Buscar bebidas"
+          autocomplete="off"
+        >
+      </label>
+
+      <button class="button navy header-cart" data-open-cart>
+        <svg fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <use href="#i-bag"/>
+        </svg>
+
+        <span class="label">Meu carrinho</span>
+        <b class="cart-count" data-count>0</b>
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap" id="inicio">
+    <div class="nav">
+      <span class="eyebrow">ADEGA & CONVENIÊNCIA</span>
+
+      <nav aria-label="Menu principal">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#como-pedir">Como pedir</a>
+        <a href="#atendimento">Atendimento</a>
+      </nav>
+    </div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="eyebrow">SEU MOMENTO COMEÇA AQUI</span>
+
+        <h1 id="hero-title">
+          Boa companhia.<br>
+          Bebida <em>gelada.</em>
+        </h1>
+
+        <p>
+          Do encontro de última hora ao brinde especial.<br>
+          Escolha sua favorita. O resto é com o Souza.
+        </p>
+
+        <a class="button white" href="#catalogo">
+          Explorar bebidas
+
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <use href="#i-arrow"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="hero-products" aria-hidden="true">
+        <div><img data-hero="ballena" alt=""></div>
+        <div><img data-hero="jack" alt=""></div>
+        <div><img data-hero="beefeater" alt=""></div>
+      </div>
+
+      <div class="hero-caption">
+        <svg fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <use href="#i-snow"/>
+        </svg>
+
+        Escolha. Peça. Aproveite.
+      </div>
+    </section>
+
+    <div class="benefits">
+      <div>
+        <svg fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <use href="#i-snow"/>
+        </svg>
+
+        <span>
+          <strong>No ponto para seu momento</strong>
+          <small>Consulte as opções geladas</small>
+        </span>
+      </div>
+
+      <div>
+        <svg fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <use href="#i-truck"/>
+        </svg>
+
+        <span>
+          <strong>Entrega ou retirada</strong>
+          <small>Combine com a nossa equipe</small>
+        </span>
+      </div>
+
+      <div>
+        <svg aria-hidden="true">
+          <use href="#i-wa"/>
+        </svg>
+
+        <span>
+          <strong>Atendimento de verdade</strong>
+          <small>Direto no WhatsApp</small>
+        </span>
+      </div>
+    </div>
+
+    <section id="catalogo" aria-labelledby="catalog-title">
+      <div class="catalog-heading">
+        <div>
+          <span class="eyebrow">ESCOLHA SEU PRÓXIMO BRINDE</span>
+          <h2 id="catalog-title">A adega está aqui.</h2>
+        </div>
+
+        <p>Seu pedido, do seu jeito.</p>
+      </div>
+
+      <div
+        id="categories"
+        class="categories"
+        role="group"
+        aria-label="Categorias"
+      ></div>
+
+      <div class="shop">
+        <div class="shop-main">
+          <div class="toolbar">
+            <span id="result-count" aria-live="polite"></span>
+
+            <select id="sort" aria-label="Ordenar produtos">
+              <option value="featured">Destaques</option>
+              <option value="low">Menor preço</option>
+              <option value="high">Maior preço</option>
+              <option value="name">Nome A–Z</option>
+            </select>
+          </div>
+
+          <div class="products" id="products"></div>
+
+          <div class="no-results" id="no-results" hidden>
+            <h3>Nenhuma bebida por aqui.</h3>
+            <p>Tente outro nome ou veja todas as opções.</p>
+
+            <button class="button navy" id="reset">
+              Ver todas as bebidas
+            </button>
+          </div>
+
+          <p class="price-note">
+            Catálogo demonstrativo. Preços de referência, disponibilidade,
+            temperatura e frete devem ser confirmados com a loja.
+          </p>
+
+          <div class="help">
+            <div>
+              <h3>A gente ajuda na escolha.</h3>
+              <p>Procurando outra bebida ou precisa de uma indicação?</p>
+            </div>
+
+            <a
+              class="button"
+              data-wa
+              href="https://wa.me/5511992973452"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Falar com o Souza
+
+              <svg aria-hidden="true">
+                <use href="#i-wa"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="backdrop" id="backdrop" hidden></div>
+
+        <aside class="cart" id="cart" aria-labelledby="cart-title">
+          <div class="cart-head">
+            <div>
+              <svg fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                <use href="#i-bag"/>
+              </svg>
+
+              <h2 id="cart-title">Seu carrinho</h2>
+            </div>
+
+            <button
+              class="icon-button close-cart"
+              id="close-cart"
+              aria-label="Fechar carrinho"
+            >
+              <svg fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                <use href="#i-x"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="cart-body">
+            <div class="empty-cart" id="empty-cart">
+              <svg fill="none" stroke="currentColor" aria-hidden="true">
+                <use href="#i-bag"/>
+              </svg>
+
+              <h3>Seu momento começa<br>com uma escolha.</h3>
+
+              <p>
+                Adicione suas bebidas favoritas<br>
+                e monte seu pedido.
+              </p>
+
+              <a href="#catalogo" id="browse">Explorar o catálogo →</a>
+            </div>
+
+            <div class="cart-items" id="cart-items"></div>
+
+            <div id="summary" hidden>
+              <button class="clear" id="clear">Esvaziar carrinho</button>
+
+              <div class="totals">
+                <p>
+                  <span>Produtos</span>
+                  <span id="subtotal"></span>
+                </p>
+
+                <p>
+                  <span>Entrega</span>
+                  <span>A confirmar</span>
+                </p>
+
+                <div>
+                  <span>Subtotal</span>
+                  <strong id="total"></strong>
+                </div>
+              </div>
+
+              <button class="button green checkout-button" id="checkout">
+                Continuar pedido
+
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <use href="#i-arrow"/>
+                </svg>
+              </button>
+
+              <p class="cart-hint">Você confere tudo antes de enviar.</p>
+            </div>
+          </div>
+
+          <div class="assurance">
+            <svg aria-hidden="true">
+              <use href="#i-wa"/>
+            </svg>
+
+            Atendimento direto com o Mercado Souza
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="how" id="como-pedir">
+      <span class="eyebrow">SIMPLES ASSIM</span>
+      <h2>O seu pedido em três passos.</h2>
+
+      <div class="steps">
+        <article>
+          <b>01</b>
+          <div>
+            <h3>Escolha suas bebidas</h3>
+            <p>Explore o catálogo e adicione ao carrinho.</p>
+          </div>
+        </article>
+
+        <article>
+          <b>02</b>
+          <div>
+            <h3>Monte o seu pedido</h3>
+            <p>Escolha entrega ou retirada e informe seus dados.</p>
+          </div>
+        </article>
+
+        <article>
+          <b>03</b>
+          <div>
+            <h3>Converse com o Souza</h3>
+            <p>Envie no WhatsApp e confirme os detalhes.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+<section
+  class="store-hours wrap"
+  id="horarios"
+  aria-labelledby="hours-title"
+>
+  <div>
+    <span class="eyebrow">ATENDIMENTO</span>
+
+    <h2 id="hours-title">Horário de funcionamento</h2>
+
+    <span class="hours-status" id="hours-status" role="status">
+      Horários da loja
+    </span>
+
+    <p class="hours-message" id="hours-message">
+      Horário de São Paulo.
+    </p>
+  </div>
+
+  <div class="hours-schedule">
+    <div>
+      <span>Segunda a sábado</span>
+      <strong>08h às 20h</strong>
+    </div>
+
+    <div>
+      <span>Domingo</span>
+      <strong>07h às 14h</strong>
+    </div>
+
+    <p>Horários regulares. Em feriados, consulte a loja.</p>
+  </div>
+</section>
+  <footer class="footer" id="atendimento">
+    <div class="wrap footer-grid">
+      <div>
+        <img
+          class="footer-logo"
+          src="logo.png"
+          alt="Logo original do Mercado Souza"
+          width="192"
+          height="108"
+        >
+
+        <p>A sua escolha para brindar os bons momentos.</p>
+      </div>
+
+      <div>
+        <h3>Conte com o Souza</h3>
+
+        <a
+          data-wa
+          href="https://wa.me/5511992973452"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          WhatsApp · (11) 99297-3452
+        </a>
+
+        <p>Consulte horários, endereço e região de entrega.</p>
+      </div>
+
+      <div>
+        <h3>Atendimento com cuidado</h3>
+        <p>A loja confirma disponibilidade, frete e pagamento.</p>
+
+        <details>
+          <summary>Privacidade</summary>
+
+          <p>
+            O site salva apenas IDs e quantidades do carrinho neste navegador.
+            Nome, telefone e endereço não são gravados pelo site: entram na
+            mensagem que você decide enviar no WhatsApp. Fontes e fotos são
+            carregadas de serviços externos. Ao abrir o WhatsApp, aplicam-se
+            as políticas dessa plataforma.
+          </p>
+        </details>
+      </div>
+    </div>
+
+    <div class="wrap footer-bottom">
+      18+ · Venda de bebidas alcoólicas somente para maiores de 18 anos.
+      Beba com moderação. Se beber, não dirija.
+    </div>
+  </footer>
+
+  <button class="mobile-cart" data-open-cart>
+    <span>
+      <svg fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+        <use href="#i-bag"/>
+      </svg>
+
+      <b data-count>0</b>
+      Ver meu carrinho
+    </span>
+
+    <strong id="mobile-total">R$ 0,00</strong>
+  </button>
+
+  <a
+    class="floating-whatsapp"
+    data-wa
+    href="https://wa.me/5511992973452"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Falar com o Mercado Souza no WhatsApp"
+  >
+    <span class="floating-label">Fale com o Souza</span>
+
+    <svg aria-hidden="true">
+      <use href="#i-wa"/>
+    </svg>
+  </a>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="checkout-dialog" aria-labelledby="checkout-title">
+    <div class="dialog-head">
+      <div>
+        <span class="eyebrow">QUASE NA HORA DO BRINDE</span>
+        <h2 id="checkout-title">Vamos fechar o pedido?</h2>
+      </div>
+
+      <button
+        class="icon-button"
+        id="close-checkout"
+        aria-label="Fechar finalização"
+      >
+        <svg fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <use href="#i-x"/>
+        </svg>
+      </button>
+    </div>
+
+    <form id="order-form">
+      <div class="form-content">
+        <fieldset>
+          <legend>Como você quer receber?</legend>
+
+          <div class="modes">
+            <label>
+              <input type="radio" name="mode" value="delivery" checked>
+              Receber em casa
+            </label>
+
+            <label>
+              <input type="radio" name="mode" value="pickup">
+              Retirar na loja
+            </label>
+          </div>
+
+          <p class="note" id="mode-note">
+            A equipe confirma a região, o prazo e a taxa de entrega.
+          </p>
+        </fieldset>
+
+        <div class="form-grid">
+          <label class="field full">
+            Seu nome
+            <input
+              name="name"
+              required
+              maxlength="100"
+              autocomplete="name"
+              placeholder="Como podemos chamar você?"
+            >
+          </label>
+
+          <label class="field full">
+            Seu WhatsApp
+            <input
+              name="phone"
+              required
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              maxlength="16"
+              placeholder="(11) 99999-9999"
+            >
+          </label>
+        </div>
+
+        <div class="form-grid" id="delivery-fields">
+          <label class="field full">
+            Rua e número
+            <input
+              name="address"
+              required
+              maxlength="180"
+              autocomplete="street-address"
+              placeholder="Ex.: Rua das Flores, 123"
+            >
+          </label>
+
+          <label class="field">
+            Bairro
+            <input
+              name="district"
+              required
+              maxlength="80"
+              placeholder="Seu bairro"
+            >
+          </label>
+
+          <label class="field">
+            Cidade
+            <input
+              name="city"
+              required
+              maxlength="80"
+              autocomplete="address-level2"
+              placeholder="Sua cidade"
+            >
+          </label>
+
+          <label class="field full">
+            Complemento ou referência
+            <small>(opcional)</small>
+            <input
+              name="reference"
+              maxlength="180"
+              placeholder="Apartamento, portão, ponto de referência..."
+            >
+          </label>
+        </div>
+
+        <div class="form-grid">
+          <label class="field full">
+            Forma de pagamento
+
+            <select name="payment" id="payment">
+              <option>Pix</option>
+              <option>Cartão de crédito</option>
+              <option>Cartão de débito</option>
+              <option>Dinheiro</option>
+            </select>
+          </label>
+
+          <label class="field full" id="change-field" hidden>
+            Troco para quanto?
+            <small>(opcional)</small>
+
+            <input
+              name="change"
+              inputmode="decimal"
+              maxlength="30"
+              placeholder="Ex.: R$ 100,00"
+            >
+          </label>
+
+          <label class="field full">
+            Observações
+            <small>(opcional)</small>
+
+            <textarea
+              name="notes"
+              maxlength="500"
+              rows="2"
+              placeholder="Algum detalhe para a equipe?"
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="review">
+          <h3>Resumo do seu pedido</h3>
+
+          <div id="review-items"></div>
+
+          <div class="review-total">
+            <span>Subtotal dos produtos</span>
+            <strong id="review-total"></strong>
+          </div>
+
+          <p class="note">
+            Preços de referência. Frete e valor final confirmados pela loja.
+          </p>
+        </div>
+
+        <label class="adult">
+          <input type="checkbox" required name="adult">
+          Declaro ter 18 anos ou mais.
+        </label>
+
+        <p class="note">
+          Seus dados serão incluídos na mensagem do WhatsApp para atender
+          este pedido. O site não armazena seus dados de entrega.
+        </p>
+      </div>
+
+      <div class="dialog-foot">
+        <button class="button green" type="submit">
+          <svg aria-hidden="true">
+            <use href="#i-wa"/>
+          </svg>
+
+          Abrir pedido no WhatsApp
+
+          <svg fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <use href="#i-arrow"/>
+          </svg>
+        </button>
+
+        <p>Revise a mensagem e toque em enviar no WhatsApp.</p>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
