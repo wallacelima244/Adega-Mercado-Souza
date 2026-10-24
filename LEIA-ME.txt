@@ -1,0 +1,6 @@
+MERCADO SOUZA — VERSÃO CORRIGIDA
+Abra index.html. Esta versão utiliza somente index.html, style.css e script.js.
+As fotos já estão DENTRO de script.js e a logo também está no HTML. Não usa imagens.js separado ou pasta assets. Substitua os três arquivos juntos; não misture com códigos antigos.
+Correções: 12 ícones exclusivos, carrinho redesenhado e status automático no cabeçalho, na faixa de atendimento e na seção de horários.
+Horários em America/Sao_Paulo: segunda a sábado 08h–20h; domingo 07h–14h. Fora do expediente mostra Fechado agora. Não há promessa de abertura em feriados.
+Produtos e preços mantidos. Os pedidos são revisados e enviados pelo próprio cliente ao WhatsApp 5511992973452; disponibilidade e frete são confirmados pela loja.
