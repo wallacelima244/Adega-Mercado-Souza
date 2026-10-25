@@ -1,24 +1,19 @@
-MERCADO SOUZA — SITE COMPLETO COM IMAGENS
+MERCADO SOUZA — IMAGENS INCORPORADAS
 
-COMO ABRIR
-1. Extraia o ZIP inteiro.
+1. Extraia este ZIP inteiro.
 2. Abra a pasta mercado-souza no VS Code.
 3. Abra index.html no navegador ou pelo Live Server.
 
-Todos os arquivos de imagem já estão incluídos em assets/produtos.
-A logo sem telefone, Instagram ou endereço está em logo.png.
-Mantenha a pasta assets junto de index.html, style.css e script.js.
-Não é necessário adicionar imagens manualmente nem baixar imagens.js.
+As imagens dos produtos já estão dentro de script.js.
+A logo limpa também está incluída no código e em logo.png para uso separado.
+Não é preciso adicionar fotos, pasta assets nem imagens.js.
+Mantenha index.html, style.css e script.js juntos.
 
-CONTATOS
 WhatsApp e pedidos: (11) 96603-6004
 Instagram: @mercado___souza
 Endereço: Rua Souza, 21 - Santana de Parnaíba - SP
-Os botões flutuantes usam vidro azul e verde, nas cores da marca.
-O site inclui botões para localizar o endereço e traçar rota no Google Maps.
+Instagram e WhatsApp flutuantes com vidro azul e verde.
 
-Horários: segunda a sábado 08h–20h; domingo 07h–14h (São Paulo).
-Disponibilidade, frete e pagamento são confirmados pela loja.
-
-PARA ATUALIZAR O SITE PUBLICADO
-Envie index.html, style.css, script.js, logo.png e a pasta assets ao seu projeto.
+Para atualizar o site publicado, envie os arquivos deste pacote ao projeto.
+O arquivo HTML único oferecido separadamente já contém CSS, JS e imagens;
+basta baixá-lo e abrir diretamente no navegador.
