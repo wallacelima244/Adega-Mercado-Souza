@@ -1,6 +1,24 @@
-MERCADO SOUZA — VERSÃO CORRIGIDA
-Abra index.html. Esta versão utiliza somente index.html, style.css e script.js.
-As fotos já estão DENTRO de script.js e a logo também está no HTML. Não usa imagens.js separado ou pasta assets. Substitua os três arquivos juntos; não misture com códigos antigos.
-Correções: 12 ícones exclusivos, carrinho redesenhado e status automático no cabeçalho, na faixa de atendimento e na seção de horários.
-Horários em America/Sao_Paulo: segunda a sábado 08h–20h; domingo 07h–14h. Fora do expediente mostra Fechado agora. Não há promessa de abertura em feriados.
-Produtos e preços mantidos. Os pedidos são revisados e enviados pelo próprio cliente ao WhatsApp 5511992973452; disponibilidade e frete são confirmados pela loja.
+MERCADO SOUZA — SITE COMPLETO COM IMAGENS
+
+COMO ABRIR
+1. Extraia o ZIP inteiro.
+2. Abra a pasta mercado-souza no VS Code.
+3. Abra index.html no navegador ou pelo Live Server.
+
+Todos os arquivos de imagem já estão incluídos em assets/produtos.
+A logo sem telefone, Instagram ou endereço está em logo.png.
+Mantenha a pasta assets junto de index.html, style.css e script.js.
+Não é necessário adicionar imagens manualmente nem baixar imagens.js.
+
+CONTATOS
+WhatsApp e pedidos: (11) 96603-6004
+Instagram: @mercado___souza
+Endereço: Rua Souza, 21 - Santana de Parnaíba - SP
+Os botões flutuantes usam vidro azul e verde, nas cores da marca.
+O site inclui botões para localizar o endereço e traçar rota no Google Maps.
+
+Horários: segunda a sábado 08h–20h; domingo 07h–14h (São Paulo).
+Disponibilidade, frete e pagamento são confirmados pela loja.
+
+PARA ATUALIZAR O SITE PUBLICADO
+Envie index.html, style.css, script.js, logo.png e a pasta assets ao seu projeto.
