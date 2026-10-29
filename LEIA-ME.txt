@@ -9,7 +9,7 @@ A logo limpa também está incluída no código e em logo.png para uso separado.
 Não é preciso adicionar fotos, pasta assets nem imagens.js.
 Mantenha index.html, style.css e script.js juntos.
 
-WhatsApp e pedidos: (11) 96603-6004
+WhatsApp e pedidos: (11) 94735-8038
 Instagram: @mercado___souza
 Endereço: Rua Souza, 21 - Santana de Parnaíba - SP
 Instagram e WhatsApp flutuantes com vidro azul e verde.
@@ -17,3 +17,12 @@ Instagram e WhatsApp flutuantes com vidro azul e verde.
 Para atualizar o site publicado, envie os arquivos deste pacote ao projeto.
 O arquivo HTML único oferecido separadamente já contém CSS, JS e imagens;
 basta baixá-lo e abrir diretamente no navegador.
+
+PRODUTOS ACRESCENTADOS
+Campari · 998 ml: R$ 64,99
+Tanqueray London Dry Gin · 750 ml: R$ 99,99
+Total: 33 cartões de produtos e 45 opções de compra.
+As duas artes em PNG estão na pasta artes, para uso separado.
+
+O site público da Vercel só muda depois de substituir os arquivos e publicar novamente.
+Todos os pedidos e contatos usam (11) 94735-8038.
