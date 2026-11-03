@@ -1,0 +1,190 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Comece aqui | Mercado Souza</title><style>
+:root{--navy:#092b55;--ink:#22364c;--muted:#718197;--yellow:#ffe500}*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}main{max-width:850px;margin:auto;padding:35px 22px 70px}header{background:var(--navy);color:#fff;border-radius:20px;padding:35px;margin-bottom:24px}header small{font-size:10px;letter-spacing:2px;color:#9bb2ce}h1{font-size:34px;line-height:1.1;letter-spacing:-1px;margin:15px 0}header p{color:#bdcde0;font-size:13px;margin-bottom:20px}.button{display:inline-block;cursor:pointer;border:0;border-radius:9px;padding:11px 16px;background:var(--yellow);color:var(--navy);font:600 12px/1.3 inherit;text-decoration:none;margin-right:8px}section{padding:26px;background:#fff;border:1px solid #e2e8ef;border-radius:14px;margin-bottom:18px}h2{font-size:21px;margin:0 0 13px;line-height:1.35;letter-spacing:-.4px}h2 b{display:inline-grid;place-items:center;width:29px;height:29px;border-radius:8px;background:#eaf0f8;color:var(--navy);font-size:14px;margin-right:10px}h3{font-size:15px;margin-bottom:8px}p,li{font-size:13px;color:#64778b}p{margin:10px 0}a{color:#0a538f}code{font-family:ui-monospace,monospace;font-size:12px;color:#0b4c83;background:#edf3fa;padding:2px 4px;border-radius:4px;overflow-wrap:anywhere}.note{padding:13px 16px;border-radius:9px;background:#fff8d8;font-size:12px;color:#7d6a29;margin:16px 0}.good{background:#edf7ef;color:#467352}details{border:1px solid #e1e7ef;border-radius:8px;margin:12px 0;padding:12px}summary{font-size:12px;font-weight:650;color:var(--navy);cursor:pointer}textarea{display:block;width:100%;min-height:180px;margin:12px 0;padding:12px;border:1px solid #dbe3ed;border-radius:8px;background:#fafbfd;color:#29445f;font:11px/1.6 ui-monospace,monospace;resize:vertical}button{font:inherit}label{display:block;font-size:12px;font-weight:650;margin-top:14px}input{width:100%;border:1px solid #d7e0eb;border-radius:8px;padding:12px;font:13px inherit;margin:6px 0 10px}.status{font-size:12px;color:#50755f}ul,ol{padding-left:20px}table{border-collapse:collapse;width:100%;font-size:12px;margin:15px 0}td,th{padding:9px;border-bottom:1px solid #e7ecf2;text-align:left}th{color:var(--navy)}footer{font-size:10px;color:#91a0b0;padding:10px 4px}footer a{color:#7c93aa}@media(max-width:500px){main{padding:18px 13px 40px}header{padding:25px}h1{font-size:29px}section{padding:20px}h2{font-size:19px}.button{margin:5px 0;font-size:11px}}
+</style></head><body><main><header><small>MERCADO SOUZA · CONFIGURAÇÃO</small><h1>Banco conectado.<br>Agora vamos publicar a loja.</h1><p>Você não precisa aprender banco de dados para seguir estes passos. O site continua em HTML, CSS e JavaScript. O Supabase cuida dos produtos, do login e das novas fotos.</p><a class="button" href="admin.html?demo=1">Experimentar demonstração →</a> <a class="button" href="index.html">Ver catálogo →</a></header>
+<div class="note">Este pacote já aponta para o projeto Mercado Souza no seu Supabase. Antes de entregar o painel, crie/libere o login do dono (passo 3) e publique os arquivos atualizados na Vercel (passo 5). A demonstração não salva alterações.</div>
+<section><h2><b>1</b> Projeto já criado</h2><p class="status">Mercado Souza · São Paulo · configuração pública preenchida neste pacote. Não é necessário criar outro projeto.</p><p>Abra <a href="https://supabase.com/dashboard" target="_blank" rel="noopener">supabase.com/dashboard</a>, crie sua conta e depois um projeto chamado <strong>Mercado Souza</strong>. Escolha uma região próxima, como São Paulo, quando disponível.</p><p>Guarde a senha do banco com você. Ela não será colocada no site. O plano Free permite começar sem mensalidade, dentro dos limites do plano.</p><div class="note">No plano Free, projetos são pausados após uma semana de inatividade. Se isso acontecer, reative o projeto no painel do Supabase. O site informa quando não consegue buscar os preços.</div></section>
+<section><h2><b>2</b> Banco preparado</h2><p class="status">As tabelas, permissões e 45 opções iniciais já foram criadas neste projeto. Não é necessário executar novamente os arquivos 01 e 02. As instruções abaixo ficam como referência para reinstalação.</p><p>No projeto, abra <strong>SQL Editor</strong>. É a tela para executar os arquivos prontos abaixo. Copie o primeiro, cole numa consulta e clique em <strong>Run</strong>. Quando terminar, repita com o segundo.</p>
+<details><summary>01 · Criar tabelas e permissões</summary><textarea id="sql-01" readonly aria-label="SQL 01">-- Mercado Souza: execute uma vez no SQL Editor do seu projeto Supabase.
+-- Este arquivo pode ser executado novamente sem apagar produtos ou administradores.
+begin;
+
+create schema if not exists souza_private;
+revoke all on schema souza_private from public, anon, authenticated;
+
+create table if not exists souza_private.admins (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+revoke all on souza_private.admins from public, anon, authenticated;
+alter table souza_private.admins enable row level security;
+drop policy if exists souza_admin_registry_no_api on souza_private.admins;
+create policy souza_admin_registry_no_api on souza_private.admins as restrictive for all to anon, authenticated
+using (false) with check (false);
+
+create or replace function souza_private.is_admin()
+returns boolean language sql stable security definer set search_path = &#x27;&#x27;
+as $$
+  select exists(select 1 from souza_private.admins a where a.user_id = (select auth.uid()));
+$$;
+revoke all on function souza_private.is_admin() from public;
+grant usage on schema souza_private to anon, authenticated;
+grant execute on function souza_private.is_admin() to anon, authenticated;
+
+create or replace function public.souza_is_admin()
+returns boolean language sql stable security invoker set search_path = &#x27;&#x27;
+as $$ select souza_private.is_admin(); $$;
+revoke all on function public.souza_is_admin() from public;
+grant execute on function public.souza_is_admin() to anon, authenticated;
+
+create table if not exists public.souza_products (
+  id text primary key default gen_random_uuid()::text,
+  name text not null check (char_length(btrim(name)) between 2 and 140),
+  detail text not null default &#x27;&#x27; check (char_length(detail) &lt;= 400),
+  category text not null check (category in (&#x27;combos&#x27;,&#x27;beer&#x27;,&#x27;spirits&#x27;,&#x27;gin&#x27;,&#x27;liqueurs&#x27;,&#x27;energy&#x27;,&#x27;wine&#x27;,&#x27;cocktail&#x27;,&#x27;drinks&#x27;,&#x27;soft&#x27;,&#x27;other&#x27;)),
+  price integer not null check (price between 1 and 10000000),
+  unit text not null default &#x27;unidade&#x27; check (char_length(btrim(unit)) between 1 and 60),
+  image_url text not null default &#x27;&#x27; check (char_length(image_url) &lt;= 2048 and
+    (image_url = &#x27;&#x27; or image_url ~ &#x27;^https://[^[:space:]&lt;&gt;]+$&#x27; or image_url ~ &#x27;^assets/products/[a-zA-Z0-9_.-]+[.](png|jpg|jpeg|webp)$&#x27;)),
+  available boolean not null default true,
+  active boolean not null default true,
+  featured boolean not null default false,
+  position integer not null default 0 check (position between 0 and 100000),
+  revision integer not null default 1,
+  updated_at timestamptz not null default now(),
+  constraint souza_product_id check (id ~ &#x27;^[a-zA-Z0-9_-]{1,100}$&#x27;)
+);
+alter table public.souza_products enable row level security;
+revoke all on public.souza_products from public, anon, authenticated;
+grant select on public.souza_products to anon;
+grant select, insert, update, delete on public.souza_products to authenticated;
+create index if not exists souza_products_catalog_idx on public.souza_products (active, position, id);
+
+create or replace function souza_private.touch_product()
+returns trigger language plpgsql set search_path = &#x27;&#x27; as $$
+begin
+  new.updated_at := now();
+  if tg_op = &#x27;UPDATE&#x27; then
+    new.revision := old.revision + 1;
+  else
+    new.revision := 1;
+  end if;
+  return new;
+end;
+$$;
+drop trigger if exists souza_products_touch on public.souza_products;
+create trigger souza_products_touch before insert or update on public.souza_products
+for each row execute function souza_private.touch_product();
+
+drop policy if exists souza_catalog_read on public.souza_products;
+create policy souza_catalog_read on public.souza_products for select to anon, authenticated
+using (active or (select public.souza_is_admin()));
+drop policy if exists souza_admin_insert on public.souza_products;
+create policy souza_admin_insert on public.souza_products for insert to authenticated
+with check ((select public.souza_is_admin()));
+drop policy if exists souza_admin_update on public.souza_products;
+create policy souza_admin_update on public.souza_products for update to authenticated
+using ((select public.souza_is_admin())) with check ((select public.souza_is_admin()));
+drop policy if exists souza_admin_delete on public.souza_products;
+create policy souza_admin_delete on public.souza_products for delete to authenticated
+using ((select public.souza_is_admin()));
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (&#x27;souza-produtos&#x27;, &#x27;souza-produtos&#x27;, true, 5242880, array[&#x27;image/jpeg&#x27;,&#x27;image/png&#x27;,&#x27;image/webp&#x27;])
+on conflict (id) do update set public = excluded.public,
+  file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists souza_admin_photos_select on storage.objects;
+create policy souza_admin_photos_select on storage.objects for select to authenticated
+using (bucket_id = &#x27;souza-produtos&#x27; and (select public.souza_is_admin()));
+drop policy if exists souza_admin_photos_insert on storage.objects;
+create policy souza_admin_photos_insert on storage.objects for insert to authenticated
+with check (bucket_id = &#x27;souza-produtos&#x27; and (select public.souza_is_admin()));
+drop policy if exists souza_admin_photos_update on storage.objects;
+create policy souza_admin_photos_update on storage.objects for update to authenticated
+using (bucket_id = &#x27;souza-produtos&#x27; and (select public.souza_is_admin()))
+with check (bucket_id = &#x27;souza-produtos&#x27; and (select public.souza_is_admin()));
+drop policy if exists souza_admin_photos_delete on storage.objects;
+create policy souza_admin_photos_delete on storage.objects for delete to authenticated
+using (bucket_id = &#x27;souza-produtos&#x27; and (select public.souza_is_admin()));
+
+commit;
+</textarea><button class="button" data-copy="sql-01">Copiar SQL</button> <a href="configuracao/01-criar-banco.sql" download>Baixar arquivo .sql</a></details>
+<details><summary>02 · Importar os produtos atuais</summary><textarea id="sql-02" readonly aria-label="SQL 02">-- Importa as 45 opções da última versão sem sobrescrever alterações existentes.
+insert into public.souza_products (id, name, detail, category, price, unit, image_url, available, active, featured, position)
+values
+(&#x27;of-campari&#x27;, &#x27;Campari&#x27;, &#x27;Aperitivo bitter · garrafa de 998 ml&#x27;, &#x27;spirits&#x27;, 6499, &#x27;unidade&#x27;, &#x27;assets/products/b096bbcb556ecad57a5a.webp&#x27;, true, true, false, 0),
+(&#x27;of-tanqueray&#x27;, &#x27;Tanqueray London Dry Gin&#x27;, &#x27;London Dry Gin · garrafa de 750 ml&#x27;, &#x27;gin&#x27;, 9999, &#x27;unidade&#x27;, &#x27;assets/products/43c5fc2b8463033c3723.webp&#x27;, true, true, false, 1),
+(&#x27;of-combo-jack&#x27;, &#x27;Combo Jack Daniel’s Blackberry + Red Bull&#x27;, &#x27;1 Jack Daniel’s + 5 Red Bulls + 5 gelos&#x27;, &#x27;combos&#x27;, 19000, &#x27;o combo&#x27;, &#x27;assets/products/d759a5a9bcb941a959c5.webp&#x27;, true, true, true, 2),
+(&#x27;of-corona-6&#x27;, &#x27;Corona Extra · pacote com 6&#x27;, &#x27;6 long necks de 330 ml&#x27;, &#x27;beer&#x27;, 4300, &#x27;o pacote&#x27;, &#x27;assets/products/2af72a9ebf797da2562e.webp&#x27;, true, true, false, 3),
+(&#x27;of-heineken-350-12&#x27;, &#x27;Heineken · pacote com 12&#x27;, &#x27;12 latas de 350 ml&#x27;, &#x27;beer&#x27;, 5900, &#x27;o pacote&#x27;, &#x27;assets/products/4c1dc228527a8a6400bf.webp&#x27;, true, true, false, 4),
+(&#x27;of-heineken-269-8&#x27;, &#x27;Heineken · pacote com 8&#x27;, &#x27;8 latas de 269 ml&#x27;, &#x27;beer&#x27;, 3500, &#x27;o pacote&#x27;, &#x27;assets/products/2a53821b605c2a80a2a5.webp&#x27;, true, true, false, 5),
+(&#x27;of-brahma-269-15&#x27;, &#x27;Brahma Duplo Malte · pacote com 15&#x27;, &#x27;15 latas de 269 ml&#x27;, &#x27;beer&#x27;, 3850, &#x27;o pacote&#x27;, &#x27;assets/products/99451e720754eb6960d4.webp&#x27;, true, true, false, 6),
+(&#x27;of-skol-269-15&#x27;, &#x27;Skol · pacote com 15&#x27;, &#x27;15 latas de 269 ml&#x27;, &#x27;beer&#x27;, 4300, &#x27;o pacote&#x27;, &#x27;assets/products/3a4c366df4a6b92fd66b.webp&#x27;, true, true, false, 7),
+(&#x27;of-itaipava-350-12&#x27;, &#x27;Itaipava · pacote com 12&#x27;, &#x27;12 latas de 350 ml&#x27;, &#x27;beer&#x27;, 3300, &#x27;o pacote&#x27;, &#x27;assets/products/2bf87ed68934a0eb57d8.webp&#x27;, true, true, false, 8),
+(&#x27;of-itaipava-269-12&#x27;, &#x27;Itaipava · pacote com 12&#x27;, &#x27;12 latas de 269 ml&#x27;, &#x27;beer&#x27;, 3050, &#x27;o pacote&#x27;, &#x27;assets/products/85b25feb66e8d045f039.webp&#x27;, true, true, false, 9),
+(&#x27;of-jack-old7&#x27;, &#x27;Jack Daniel’s Old Nº 7&#x27;, &#x27;Garrafa de 1 litro&#x27;, &#x27;spirits&#x27;, 12500, &#x27;unidade&#x27;, &#x27;assets/products/0694b05c0aae9a728558.webp&#x27;, true, true, false, 10),
+(&#x27;of-jack-apple&#x27;, &#x27;Jack Daniel’s Tennessee Apple&#x27;, &#x27;Garrafa de 1 litro&#x27;, &#x27;spirits&#x27;, 12500, &#x27;unidade&#x27;, &#x27;assets/products/0694b05c0aae9a728558.webp&#x27;, true, true, false, 11),
+(&#x27;of-jack-blackberry&#x27;, &#x27;Jack Daniel’s Tennessee Blackberry&#x27;, &#x27;Garrafa de 1 litro&#x27;, &#x27;spirits&#x27;, 12500, &#x27;unidade&#x27;, &#x27;assets/products/0694b05c0aae9a728558.webp&#x27;, true, true, false, 12),
+(&#x27;of-ballena-original&#x27;, &#x27;Ballena Original&#x27;, &#x27;Garrafa · consulte o volume no atendimento&#x27;, &#x27;liqueurs&#x27;, 11000, &#x27;unidade&#x27;, &#x27;assets/products/b17b0598d5f05f77e80e.webp&#x27;, true, true, false, 13),
+(&#x27;of-ballena-coco&#x27;, &#x27;Ballena Coco&#x27;, &#x27;Garrafa · consulte o volume no atendimento&#x27;, &#x27;liqueurs&#x27;, 11000, &#x27;unidade&#x27;, &#x27;assets/products/b17b0598d5f05f77e80e.webp&#x27;, true, true, false, 14),
+(&#x27;of-ballena-chocolate&#x27;, &#x27;Ballena Chocolate e Caramelo&#x27;, &#x27;Garrafa · consulte o volume no atendimento&#x27;, &#x27;liqueurs&#x27;, 11000, &#x27;unidade&#x27;, &#x27;assets/products/b17b0598d5f05f77e80e.webp&#x27;, true, true, false, 15),
+(&#x27;of-invictus-tropical&#x27;, &#x27;Invictus Tropical&#x27;, &#x27;Coquetel elaborado com dry gin · 900 ml&#x27;, &#x27;gin&#x27;, 1850, &#x27;unidade&#x27;, &#x27;assets/products/d6780e9dec5afb7d03ad.webp&#x27;, true, true, false, 16),
+(&#x27;of-invictus-morango&#x27;, &#x27;Invictus Morango com Pêssego&#x27;, &#x27;Coquetel elaborado com dry gin · 900 ml&#x27;, &#x27;gin&#x27;, 1850, &#x27;unidade&#x27;, &#x27;assets/products/d6780e9dec5afb7d03ad.webp&#x27;, true, true, false, 17),
+(&#x27;of-invictus-melancia&#x27;, &#x27;Invictus Melancia&#x27;, &#x27;Coquetel elaborado com dry gin · 900 ml&#x27;, &#x27;gin&#x27;, 1850, &#x27;unidade&#x27;, &#x27;assets/products/d6780e9dec5afb7d03ad.webp&#x27;, true, true, false, 18),
+(&#x27;of-vibe-tropical&#x27;, &#x27;V!be Tropical&#x27;, &#x27;Energético · garrafa · volume a confirmar&#x27;, &#x27;energy&#x27;, 1099, &#x27;unidade&#x27;, &#x27;assets/products/4b814b39e8c7ea0e4ee3.webp&#x27;, true, true, false, 19),
+(&#x27;of-vibe-melancia&#x27;, &#x27;V!be Melancia&#x27;, &#x27;Energético · garrafa · volume a confirmar&#x27;, &#x27;energy&#x27;, 1099, &#x27;unidade&#x27;, &#x27;assets/products/4b814b39e8c7ea0e4ee3.webp&#x27;, true, true, false, 20),
+(&#x27;of-vibe-limao&#x27;, &#x27;V!be Limão&#x27;, &#x27;Energético · garrafa · volume a confirmar&#x27;, &#x27;energy&#x27;, 1099, &#x27;unidade&#x27;, &#x27;assets/products/4b814b39e8c7ea0e4ee3.webp&#x27;, true, true, false, 21),
+(&#x27;of-vibe-laranja&#x27;, &#x27;V!be Laranja&#x27;, &#x27;Energético · garrafa · volume a confirmar&#x27;, &#x27;energy&#x27;, 1099, &#x27;unidade&#x27;, &#x27;assets/products/4b814b39e8c7ea0e4ee3.webp&#x27;, true, true, false, 22),
+(&#x27;of-vibe-pessego&#x27;, &#x27;V!be Pêssego e Morango&#x27;, &#x27;Energético · garrafa · volume a confirmar&#x27;, &#x27;energy&#x27;, 1099, &#x27;unidade&#x27;, &#x27;assets/products/4b814b39e8c7ea0e4ee3.webp&#x27;, true, true, false, 23),
+(&#x27;of-vibe-acai&#x27;, &#x27;V!be Açaí com Coco&#x27;, &#x27;Energético · garrafa · volume a confirmar&#x27;, &#x27;energy&#x27;, 1099, &#x27;unidade&#x27;, &#x27;assets/products/4b814b39e8c7ea0e4ee3.webp&#x27;, true, true, false, 24),
+(&#x27;of-coca-25&#x27;, &#x27;Coca-Cola 2,5 L&#x27;, &#x27;Não retornável · garrafa de 2,5 litros&#x27;, &#x27;soft&#x27;, 1550, &#x27;unidade&#x27;, &#x27;assets/products/ceffb8b8b29fbc42a3b4.webp&#x27;, true, true, false, 25),
+(&#x27;of-coca-retornavel&#x27;, &#x27;Coca-Cola retornável&#x27;, &#x27;Garrafa retornável · consulte volume e troca de vasilhame&#x27;, &#x27;soft&#x27;, 975, &#x27;unidade&#x27;, &#x27;assets/products/ca83f01d8f95665f9a3f.webp&#x27;, true, true, false, 26),
+(&#x27;of-coca-25-6&#x27;, &#x27;Coca-Cola 2,5 L · pacote com 6&#x27;, &#x27;6 garrafas de 2,5 litros&#x27;, &#x27;soft&#x27;, 6250, &#x27;o pacote&#x27;, &#x27;assets/products/ec61de3f7aaf8a6671b4.webp&#x27;, true, true, false, 27),
+(&#x27;of-tubaina-2-6&#x27;, &#x27;Tubaína 2 L · pacote com 6&#x27;, &#x27;6 garrafas de 2 litros&#x27;, &#x27;soft&#x27;, 3750, &#x27;o pacote&#x27;, &#x27;assets/products/5d598f700261a997b6b2.webp&#x27;, true, true, false, 28),
+(&#x27;of-absolut-1&#x27;, &#x27;Absolut Original&#x27;, &#x27;Vodka · garrafa de 1 litro&#x27;, &#x27;spirits&#x27;, 7499, &#x27;unidade&#x27;, &#x27;assets/products/0e4ec60c275c12fa1eb0.webp&#x27;, true, true, false, 29),
+(&#x27;of-ciroc-red&#x27;, &#x27;Cîroc Red Berry&#x27;, &#x27;Vodka · garrafa · volume a confirmar&#x27;, &#x27;spirits&#x27;, 17500, &#x27;unidade&#x27;, &#x27;assets/products/f4277d5323fad5eefa15.webp&#x27;, true, true, false, 30),
+(&#x27;of-ciroc-original&#x27;, &#x27;Cîroc Original&#x27;, &#x27;Vodka · garrafa · volume a confirmar&#x27;, &#x27;spirits&#x27;, 15500, &#x27;unidade&#x27;, &#x27;assets/products/2f59d23921ca3240a3e9.webp&#x27;, true, true, false, 31),
+(&#x27;of-dreher&#x27;, &#x27;Dreher&#x27;, &#x27;Tradição Centenária · 900 ml&#x27;, &#x27;spirits&#x27;, 1899, &#x27;unidade&#x27;, &#x27;assets/products/dab9ab95c71d23e87010.webp&#x27;, true, true, false, 32),
+(&#x27;of-sangue-boi&#x27;, &#x27;Sangue de Boi&#x27;, &#x27;Vinho tinto suave · 750 ml&#x27;, &#x27;wine&#x27;, 1625, &#x27;unidade&#x27;, &#x27;assets/products/1c0e0eae14369577afb0.webp&#x27;, true, true, false, 33),
+(&#x27;of-cantina&#x27;, &#x27;Cantina Agrícola&#x27;, &#x27;Vinho Bordô suave · 750 ml&#x27;, &#x27;wine&#x27;, 1450, &#x27;unidade&#x27;, &#x27;assets/products/fab72e244228c4efc66e.webp&#x27;, true, true, false, 34),
+(&#x27;of-pergola&#x27;, &#x27;Pérgola Seleção Suave&#x27;, &#x27;Vinho tinto de mesa · 1 litro&#x27;, &#x27;wine&#x27;, 2399, &#x27;unidade&#x27;, &#x27;assets/products/d0d99a5ebad7b6e4ee10.webp&#x27;, true, true, false, 35),
+(&#x27;of-sangue-vale&#x27;, &#x27;Sangue do Vale&#x27;, &#x27;Coquetel alcoólico · 880 ml&#x27;, &#x27;cocktail&#x27;, 699, &#x27;unidade&#x27;, &#x27;assets/products/29cfb95a7c7101217772.webp&#x27;, true, true, false, 36),
+(&#x27;of-bob&#x27;, &#x27;Bob Pinga&#x27;, &#x27;Bebida alcoólica mista · 975 ml&#x27;, &#x27;cocktail&#x27;, 2750, &#x27;unidade&#x27;, &#x27;assets/products/4bcead8cbcde2d93ee40.webp&#x27;, true, true, false, 37),
+(&#x27;of-chanceler&#x27;, &#x27;Chanceler Golden Label&#x27;, &#x27;Aperitivo com whisky e carvalho · 1 litro&#x27;, &#x27;cocktail&#x27;, 1850, &#x27;unidade&#x27;, &#x27;assets/products/f828c5e17588dd70196b.webp&#x27;, true, true, false, 38),
+(&#x27;of-busca&#x27;, &#x27;Busca Brisa&#x27;, &#x27;Bebida alcoólica mista · 1 litro&#x27;, &#x27;cocktail&#x27;, 2850, &#x27;unidade&#x27;, &#x27;assets/products/c6805b0b0a88503dd167.webp&#x27;, true, true, false, 39),
+(&#x27;of-corote-whisky&#x27;, &#x27;Corote Combo Whisky&#x27;, &#x27;Coquetel alcoólico gaseificado · 1 litro&#x27;, &#x27;cocktail&#x27;, 1299, &#x27;unidade&#x27;, &#x27;assets/products/798c69e11289732553e7.webp&#x27;, true, true, false, 40),
+(&#x27;of-corote-gin&#x27;, &#x27;Corote Combo Gin Tropical&#x27;, &#x27;Coquetel alcoólico gaseificado · 1 litro&#x27;, &#x27;cocktail&#x27;, 1299, &#x27;unidade&#x27;, &#x27;assets/products/798c69e11289732553e7.webp&#x27;, true, true, false, 41),
+(&#x27;of-canelinha&#x27;, &#x27;Canelinha Da Rocha&#x27;, &#x27;Coquetel alcoólico de canela e gengibre · 900 ml&#x27;, &#x27;cocktail&#x27;, 1650, &#x27;unidade&#x27;, &#x27;assets/products/91ced24aba27583367ab.webp&#x27;, true, true, false, 42),
+(&#x27;of-copao&#x27;, &#x27;Copão de Jack Daniel’s&#x27;, &#x27;Com gelo de coco e Red Bull · volume a confirmar&#x27;, &#x27;drinks&#x27;, 4300, &#x27;o copão&#x27;, &#x27;assets/products/ab711a9205f2a2d1bd56.webp&#x27;, true, true, true, 43),
+(&#x27;of-carvao&#x27;, &#x27;Carvão Funchal&#x27;, &#x27;Pacote de 2 kg&#x27;, &#x27;other&#x27;, 1450, &#x27;o pacote&#x27;, &#x27;assets/products/c774bd530b8dd94a64c4.webp&#x27;, true, true, true, 44)
+on conflict (id) do nothing;
+</textarea><button class="button" data-copy="sql-02">Copiar SQL</button> <a href="configuracao/02-importar-catalogo.sql" download>Baixar arquivo .sql</a></details>
+<p>O primeiro cria as tabelas e permissões. O segundo traz as <strong>45 opções de compra</strong> da versão de 29/10, com os preços e as imagens originais. Repetir a importação não sobrescreve mudanças feitas pelo dono.</p><p>Se o catálogo não aparecer depois, confira nas configurações da Data API se o esquema <code>public</code> está exposto. O esquema <code>souza_private</code> fica privado e não deve ser exposto.</p></section>
+<section><h2><b>3</b> Crie o acesso do dono</h2><p>Abra <strong>Authentication → Users</strong> e crie um usuário com o email e a senha que o dono vai usar. Confirme o email na criação, se a tela oferecer essa opção.</p><p>Volte ao <strong>SQL Editor</strong>, copie o arquivo abaixo e troque <code>TROQUE-PELO-SEU-EMAIL</code> pelo mesmo email cadastrado. Execute com <strong>Run</strong>.</p>
+<details><summary>03 · Liberar o administrador</summary><textarea id="sql-03" readonly aria-label="SQL 03">-- Antes: em Authentication &gt; Users, crie o usuário com email e senha e confirme o email.
+-- Troque somente o email abaixo pelo mesmo email cadastrado e execute no SQL Editor.
+do $$
+declare
+  admin_email text := &#x27;TROQUE-PELO-SEU-EMAIL&#x27;;
+  admin_id uuid;
+begin
+  select id into admin_id from auth.users where lower(email) = lower(btrim(admin_email));
+  if admin_id is null then
+    raise exception &#x27;Email não encontrado. Crie o usuário em Authentication &gt; Users antes de executar este arquivo.&#x27;;
+  end if;
+  insert into souza_private.admins(user_id) values (admin_id) on conflict do nothing;
+end;
+$$;
+</textarea><button class="button" data-copy="sql-03">Copiar SQL</button> <a href="configuracao/03-liberar-administrador.sql" download>Baixar arquivo .sql</a></details>
+<p>Ter uma conta não basta: somente os emails liberados por esse arquivo podem alterar os produtos. Para dar acesso a outra pessoa, crie o usuário e repita esse passo com o novo email.</p><p>Como o painel não tem cadastro público, você pode desativar novos cadastros nas configurações de Authentication e criar os acessos manualmente. Não compartilhe sua senha da conta Supabase com o dono; ele usa somente o login do painel da loja.</p></section>
+<section><h2><b>4</b> Conexão já preenchida</h2><p class="status">O config.js desta entrega já tem a URL e a publishable key do projeto. O formulário abaixo fica disponível caso você precise trocar o projeto no futuro.</p><p>Em <strong>Connect</strong> ou nas configurações de API do projeto, localize <strong>Project URL</strong> e a <strong>Publishable key</strong>, que começa com <code>sb_publishable_</code>.</p><p>Preencha abaixo para gerar o arquivo. Esses dois valores identificam a conexão pública; as permissões criadas no banco controlam quem pode editar.</p><form id="config-form"><label for="project-url">Project URL</label><input id="project-url" type="url" placeholder="https://seu-projeto.supabase.co" required autocomplete="off"><label for="publishable-key">Publishable key</label><input id="publishable-key" placeholder="sb_publishable_..." required autocomplete="off"><div class="note">Use somente a chave publishable. Não coloque senha do banco, chave secret ou service_role aqui.</div><button class="button" type="submit">Gerar config.js →</button><p id="config-status" class="status" role="status"></p></form><div id="config-result" hidden><textarea id="config-code" readonly aria-label="Conteúdo do config.js"></textarea><button class="button" id="download-config">Baixar config.js</button><button class="button" data-copy="config-code">Copiar conteúdo</button><p>Substitua o <code>config.js</code> da pasta do site por esse arquivo. Esse é o único arquivo de conexão que você precisa preencher.</p></div></section>
+<section><h2><b>5</b> Publique na Vercel</h2><p>Atualize os arquivos do projeto que já está ligado à sua Vercel. Se usa GitHub, envie o conteúdo desta pasta ao repositório que publica o site.</p><p>O <code>index.html</code> precisa ficar na raiz configurada do projeto, junto com <code>admin.html</code>, <code>config.js</code> e a pasta <code>assets</code>. Não envie apenas o HTML: as imagens e os scripts também fazem parte do site.</p><p>É um site estático, sem etapa de compilação ou instalação de pacotes. No projeto da Vercel, use a configuração de site estático/Other, sem comando de build. Preserve o domínio e o projeto atuais.</p><div class="note good">Depois dessa publicação inicial, cadastrar bebidas e mudar preços pelo painel não exige republicar na Vercel.</div></section>
+<section><h2><b>6</b> Entre e confira</h2><p>Abra o endereço do seu site com <code>/admin.html</code> no final. Entre com o email e a senha criados no passo 3. O link “Área do administrador” também aparece no rodapé da loja.</p><table><thead><tr><th>Ação no painel</th><th>O que acontece na loja</th></tr></thead><tbody><tr><td>Salvar produto</td><td>O catálogo busca o novo nome, foto e preço.</td></tr><tr><td>Desativar “Disponível para comprar”</td><td>O item aparece como esgotado, sem botão de adicionar.</td></tr><tr><td>Desativar “Mostrar na loja”</td><td>O item fica oculto, preservado no painel.</td></tr><tr><td>Ativar “Colocar em destaque”</td><td>O produto entra na vitrine inicial.</td></tr></tbody></table><p>Abra a loja em outra aba para conferir. Ela busca o catálogo ao abrir, ao voltar para a aba, a cada 60 segundos enquanto estiver visível e antes de finalizar um pedido. Se um preço do carrinho mudar, o cliente precisa revisar o resumo antes de enviar.</p><div class="note"><strong>Fotos com preços impressos:</strong> algumas artes da versão anterior já têm um preço desenhado. Editar o valor no painel não muda o texto dentro da imagem. Troque a arte por uma foto sem preço para evitar valores diferentes.</div><p>As fotos novas ficam no Supabase. As imagens originais continuam na pasta <code>assets/products</code>; mantenha essa pasta ao publicar. Ao excluir ou trocar um produto, a imagem antiga não é apagada automaticamente, pois outros itens podem usá-la.</p><p>Para preços promocionais, altere o preço e marque o produto como destaque. Combos são cadastrados na categoria “Combos”, com os itens descritos no campo de descrição.</p></section>
+<section><h2>Se algo não funcionar</h2><ul><li><strong>“Falta conectar o banco”:</strong> preencha e publique o <code>config.js</code>.</li><li><strong>“Conta sem permissão”:</strong> execute o arquivo 03 com o email correto.</li><li><strong>Produto não aparece:</strong> confira “Mostrar na loja” e atualize a página do catálogo.</li><li><strong>Conflito de edição:</strong> feche a edição, atualize a lista e abra novamente. Isso protege uma alteração feita em outra tela.</li><li><strong>Catálogo indisponível:</strong> verifique a conexão, se o projeto Supabase está ativo e se os arquivos 01 e 02 foram executados.</li><li><strong>Foto não envia:</strong> use JPG, PNG ou WebP com até 15 MB. O painel reduz a imagem antes de enviar.</li><li><strong>Precisa de nova senha:</strong> o responsável deve usar as opções de recuperação/gerenciamento do usuário no Supabase. Não é necessário editar código.</li></ul></section>
+<footer>Preparado em 03/11/2026 a partir da versão de 29/10/2026. Endereço atualizado com a informação fornecida: Rua Souza, 63B, Vila Amaral, Santana de Parnaíba. Pedidos pelo site continuam voltados à adega/bebidas.<br>Referências oficiais: <a href="https://supabase.com/docs/guides/getting-started/api-keys">chaves de API</a> · <a href="https://supabase.com/docs/guides/database/postgres/row-level-security">permissões</a> · <a href="https://supabase.com/docs/guides/storage/security/access-control">fotos</a> · <a href="https://supabase.com/pricing">planos e limites</a>.</footer>
+</main><script>
+function copyText(id,button){const el=document.getElementById(id);el.select();try{document.execCommand('copy');button.textContent='Copiado ✓'}catch{button.textContent='Selecione e copie o texto acima'}}
+document.querySelectorAll('[data-copy]').forEach(button=>button.onclick=()=>copyText(button.dataset.copy,button));
+document.getElementById('config-form').onsubmit=event=>{event.preventDefault();const url=document.getElementById('project-url').value.trim().replace(/\/$/,'');const key=document.getElementById('publishable-key').value.trim();const status=document.getElementById('config-status');if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)||!key.startsWith('sb_publishable_')){status.textContent='Confira a Project URL e use somente a chave que começa com sb_publishable_.';return;}document.getElementById('config-code').value='window.SOUZA_CONFIG = Object.freeze('+JSON.stringify({supabaseUrl:url,supabasePublishableKey:key},null,2)+');\n';document.getElementById('config-result').hidden=false;status.textContent='Arquivo preparado. Baixe e substitua o config.js do projeto.';};
+document.getElementById('download-config').onclick=()=>{const blob=new Blob([document.getElementById('config-code').value],{type:'text/javascript;charset=utf-8'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='config.js';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+</script></body></html>

@@ -1,28 +1,16 @@
-MERCADO SOUZA — IMAGENS INCORPORADAS
+MERCADO SOUZA — SITE COM PAINEL E BANCO CONECTADO
 
-1. Extraia este ZIP inteiro.
-2. Abra a pasta mercado-souza no VS Code.
-3. Abra index.html no navegador ou pelo Live Server.
+O projeto Mercado Souza foi criado no seu Supabase, na região de São Paulo.
+As tabelas, permissões, espaço para fotos e 45 produtos já foram configurados.
+O arquivo config.js já está preenchido somente com a conexão pública.
 
-As imagens dos produtos já estão dentro de script.js.
-A logo limpa também está incluída no código e em logo.png para uso separado.
-Não é preciso adicionar fotos, pasta assets nem imagens.js.
-Mantenha index.html, style.css e script.js juntos.
+PRÓXIMOS PASSOS
+1. Abrir COMECE-AQUI.html e seguir o passo 3 para criar/liberar o login do dono.
+2. Abrir esta pasta no VS Code e atualizar os arquivos do repositório GitHub do site.
+3. Publicar pelo projeto Vercel existente. Não é preciso instalar pacotes nem compilar.
 
-WhatsApp e pedidos: (11) 94735-8038
-Instagram: @mercado___souza
-Endereço: Rua Souza, 21 - Santana de Parnaíba - SP
-Instagram e WhatsApp flutuantes com vidro azul e verde.
+Abra admin.html e escolha a demonstração para conhecer o painel.
+A demonstração não salva dados. O acesso real exige usuário autorizado.
 
-Para atualizar o site publicado, envie os arquivos deste pacote ao projeto.
-O arquivo HTML único oferecido separadamente já contém CSS, JS e imagens;
-basta baixá-lo e abrir diretamente no navegador.
-
-PRODUTOS ACRESCENTADOS
-Campari · 998 ml: R$ 64,99
-Tanqueray London Dry Gin · 750 ml: R$ 99,99
-Total: 33 cartões de produtos e 45 opções de compra.
-As duas artes em PNG estão na pasta artes, para uso separado.
-
-O site público da Vercel só muda depois de substituir os arquivos e publicar novamente.
-Todos os pedidos e contatos usam (11) 94735-8038.
+Mantenha a pasta assets ao enviar o projeto.
+Artes antigas podem ter preços desenhados; substitua a arte quando mudar esse preço.

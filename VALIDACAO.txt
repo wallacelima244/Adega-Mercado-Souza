@@ -1,0 +1,39 @@
+MERCADO SOUZA — ESTADO E VERIFICAÇÃO (03/11/2026)
+
+BASE
+Pacote mercado-souza-corrigido.zip de 29/10; 45 opções e 33 imagens únicas.
+Endereço atualizado para Rua Souza, 63B, Vila Amaral, Santana de Parnaíba.
+
+CONFIGURADO NA CONTA REAL
+Projeto Mercado Souza, referência xzxpmgesydlwlnexymxo, região sa-east-1 (São Paulo).
+Criação cotada pelo Supabase em US$ 0/mês no momento da criação.
+Tabelas, permissões, controle de revisão e bucket souza-produtos criados.
+45 produtos importados sem substituir alterações existentes.
+config.js preenchido com URL e publishable key; nenhuma senha ou chave secreta incluída.
+
+VERIFICADO
+Leitura do catálogo pela API usando a mesma biblioteca oficial do site: 45 produtos.
+Todos os preços retornados em centavos inteiros e maiores que zero.
+Chamada pública souza_is_admin retorna false.
+RLS ativo no catálogo e no registro privado de administradores.
+Verificação de segurança do Supabase após configuração: nenhum alerta retornado.
+Visitantes não têm INSERT no catálogo nem SELECT no registro de administradores.
+Verificação local de SQL em PostgreSQL embarcado: importação idempotente, autorização,
+controle de revisões, exclusões, validações de preço/imagem/categoria e escopo das fotos.
+Verificação anterior do catálogo: carrinho persistido, esgotados, exclusões, atualização
+de preço, catálogo vazio e bloqueio de compras após falha de conexão.
+Painel conferido em navegador e largura de celular; demonstração de cadastro/edição/exclusão.
+
+NOTA DE DESEMPENHO
+O índice souza_products_catalog_idx é novo e pode aparecer como ainda não utilizado;
+foi mantido para a ordenação do catálogo conforme o volume crescer.
+Referência: https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index
+
+AINDA PENDENTE
+Criar o usuário de login e liberar seu email como administrador (passo 3 do guia).
+Publicar este pacote no repositório GitHub/projeto Vercel existente.
+Testar login e envio de fotos com o usuário real, depois dessa configuração.
+O site publicado na Vercel não foi alterado nesta etapa.
+
+ATENÇÃO ÀS IMAGENS
+Artes antigas podem conter preços desenhados. Alterar o preço no banco não modifica a arte.

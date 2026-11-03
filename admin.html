@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#092b55">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administração | Mercado Souza</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="admin.css">
+  <script src="assets/vendor/supabase.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="souza-db.js" defer></script>
+  <script src="catalogo-inicial.js" defer></script>
+  <script src="admin.js" defer></script>
+</head>
+<body>
+  <div id="auth-view" class="auth-shell">
+    <aside class="auth-brand">
+      <a href="index.html" class="brand-lockup"><img src="logo.png" alt="Mercado Souza"><span>Mercado Souza<small>ADEGA & BEBIDAS</small></span></a>
+      <div class="brand-message"><span class="eyebrow">SUA LOJA, DO SEU JEITO</span><h1>O catálogo<br>na sua mão<span>.</span></h1><p>Adicione aquela novidade.<br>Atualize o preço. Deixe tudo pronto<br>para o próximo pedido.</p><div class="brand-note"><span>✓</span> Tudo em um só lugar.</div></div>
+      <small class="brand-footer">Área exclusiva da administração</small>
+    </aside>
+    <main class="auth-main">
+      <section class="auth-card" aria-labelledby="login-title">
+        <span class="eyebrow">BEM-VINDO AO SOUZA</span>
+        <h2 id="login-title">Vamos cuidar da loja?</h2>
+        <p>Entre com o acesso de administrador.</p>
+        <div id="setup-note" class="notice" hidden><strong>Falta conectar o banco.</strong><p>O painel está preparado. Siga o guia de configuração para ativar seu acesso.</p><a href="COMECE-AQUI.html">Abrir guia de configuração ↗</a></div>
+        <form id="login-form">
+          <label class="field">Email<input type="email" name="email" autocomplete="username" required maxlength="254" placeholder="seu@email.com"></label>
+          <label class="field">Senha<span class="password-wrap"><input type="password" name="password" autocomplete="current-password" required minlength="6" maxlength="200" placeholder="Sua senha"><button type="button" id="show-password" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button></span></label>
+          <p id="login-error" class="form-error" role="alert" hidden></p>
+          <button class="button primary full" type="submit" id="login-submit">Entrar no painel <span>→</span></button>
+        </form>
+        <button class="text-button demo-link" id="open-demo">Conhecer o painel em demonstração →</button>
+        <p class="auth-help">O acesso é criado pelo responsável do site.<br>Se precisar recuperar sua senha, fale com ele.</p>
+        <a class="back-link" href="index.html">← Voltar para a loja</a>
+      </section>
+    </main>
+  </div>
+
+  <div id="dashboard" hidden>
+    <aside class="sidebar">
+      <a class="brand-lockup" href="index.html"><img src="logo.png" alt="Mercado Souza"><span>Mercado Souza<small>PAINEL DA LOJA</small></span></a>
+      <span class="sidebar-label">GERENCIAR</span>
+      <div class="sidebar-selected"><span aria-hidden="true">▦</span> Produtos <span class="nav-dot"></span></div>
+      <a class="sidebar-link" href="index.html" target="_blank" rel="noopener">Ver minha loja <span>↗</span></a>
+      <div class="sidebar-tip"><span class="tip-mark">↗</span><strong>Chegou novidade?</strong><p>Cadastre a bebida e ela já pode aparecer no catálogo.</p><button class="text-button" data-new>Adicionar produto →</button></div>
+      <div class="sidebar-account"><span class="avatar">S</span><div><strong>Administrador</strong><small id="account-email"></small></div><button id="logout" class="icon-button" aria-label="Sair do painel" title="Sair">↪</button></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><span>Mercado Souza <span class="breadcrumb">/</span> <strong>Produtos</strong></span><a href="index.html" target="_blank" rel="noopener" class="topbar-store">Abrir loja ↗</a></header>
+      <div id="demo-banner" class="demo-banner" hidden><span><strong>Demonstração</strong> · Explore à vontade. As alterações ficam só nesta tela e não são salvas.</span><button class="text-button" id="exit-demo">Sair da demonstração</button></div>
+      <main class="workspace-content">
+        <div class="page-heading"><div><span class="eyebrow">CATÁLOGO DA LOJA</span><h1>Seus produtos<span>.</span></h1><p>Uma mudança aqui. Seu catálogo atualizado.</p></div><button class="button primary" data-new><span aria-hidden="true">＋</span> Novo produto</button></div>
+        <div class="stats" aria-label="Resumo do catálogo"><article><span>Total de produtos</span><strong id="stat-total">—</strong><small>no seu catálogo</small></article><article><span>À venda</span><strong id="stat-available">—</strong><small>visíveis e disponíveis</small></article><article><span>Esgotados</span><strong id="stat-soldout">—</strong><small>aguardando reposição</small></article><article><span>Em destaque</span><strong id="stat-featured">—</strong><small>na vitrine da loja</small></article></div>
+        <div id="dashboard-error" class="notice error-notice" role="alert" hidden></div>
+        <div id="import-note" class="notice import-notice" hidden><div><strong>Vamos trazer os produtos da sua loja?</strong><p>Importe as 45 opções da última versão, com fotos e preços. Isso é feito uma única vez.</p></div><button class="button secondary" id="import-products">Importar catálogo atual</button></div>
+        <section class="catalog-panel" aria-labelledby="products-title">
+          <div class="panel-heading"><h2 id="products-title">Todos os produtos <span id="product-count">0</span></h2><button class="text-button" id="refresh-products">↻ Atualizar</button></div>
+          <div class="filters"><label class="admin-search"><span aria-hidden="true">⌕</span><input type="search" id="product-search" placeholder="Buscar pelo nome da bebida…" aria-label="Buscar produtos"></label><select id="category-filter" aria-label="Filtrar por categoria"><option value="all">Todas as categorias</option></select><select id="status-filter" aria-label="Filtrar por situação"><option value="all">Todas as situações</option><option value="available">À venda</option><option value="soldout">Esgotados</option><option value="hidden">Ocultos</option><option value="featured">Em destaque</option></select></div>
+          <div id="loading-products" class="loading-products" role="status">Carregando seus produtos…</div>
+          <div class="table-scroll"><table id="product-table"><thead><tr><th scope="col">Produto</th><th scope="col">Categoria</th><th scope="col">Preço</th><th scope="col">Situação</th><th scope="col"><span class="sr-only">Ações</span></th></tr></thead><tbody id="product-rows"></tbody></table></div>
+          <div class="empty-products" id="empty-products" hidden><span aria-hidden="true">▦</span><h3>Nenhum produto por aqui</h3><p id="empty-description">Cadastre o primeiro produto para começar.</p><button class="button secondary" data-new>Adicionar produto</button></div>
+          <div class="panel-footer"><span id="results-label" aria-live="polite"></span><span>Preços em reais · R$</span></div>
+        </section>
+        <p class="workspace-note">O cliente monta o pedido no site e confirma disponibilidade e entrega pelo WhatsApp.</p>
+      </main>
+    </div>
+  </div>
+
+  <dialog class="editor-dialog" id="product-editor" aria-labelledby="editor-title">
+    <form id="product-form">
+      <div class="editor-heading"><div><span class="eyebrow">CATÁLOGO DO SOUZA</span><h2 id="editor-title">Novo produto</h2></div><button type="button" class="close-button" id="close-editor" aria-label="Fechar edição">×</button></div>
+      <div class="editor-body">
+        <div class="editor-columns">
+          <div class="photo-column"><label class="photo-picker" for="product-photo"><img id="photo-preview" src="assets/product-placeholder.svg" alt="Prévia da foto do produto"><span class="photo-action">＋ Escolher foto</span></label><input id="product-photo" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only"><p class="field-hint">JPG, PNG ou WebP. A foto será ajustada para carregar mais rápido.</p><button type="button" id="remove-photo" class="text-button">Remover foto</button><p class="field-hint legacy-photo-note">Algumas artes antigas têm o preço escrito na imagem. Ao mudar o valor, substitua a arte por uma foto sem preço.</p></div>
+          <div class="product-fields">
+            <label class="field">Nome da bebida<input name="name" required minlength="2" maxlength="140" placeholder="Ex.: Heineken long neck 330 ml"></label>
+            <label class="field">Descrição<textarea name="detail" maxlength="400" rows="2" placeholder="Volume, sabor ou o que vem no combo"></textarea></label>
+            <label class="field">Categoria<select name="category" required></select></label>
+            <div class="field-pair"><label class="field">Preço (R$)<input name="price" inputmode="decimal" required maxlength="14" placeholder="19,90"></label><label class="field">Unidade de venda<input name="unit" required maxlength="60" placeholder="unidade, o pacote…" value="unidade"></label></div>
+            <div class="field-pair"><label class="field">Posição no catálogo<input name="position" type="number" min="0" max="100000" step="1" value="0" required><small>Números menores aparecem antes.</small></label><div></div></div>
+          </div>
+        </div>
+        <div class="product-options"><label class="toggle-row"><span><strong>Mostrar na loja</strong><small>Desative para ocultar sem excluir.</small></span><input name="active" type="checkbox" role="switch" checked></label><label class="toggle-row"><span><strong>Disponível para comprar</strong><small>Desative quando o produto estiver esgotado.</small></span><input name="available" type="checkbox" role="switch" checked></label><label class="toggle-row"><span><strong>Colocar em destaque</strong><small>Aparece na vitrine do início do site.</small></span><input name="featured" type="checkbox" role="switch"></label></div>
+        <p class="form-error" id="editor-error" role="alert" hidden></p>
+        <p class="field-hint" id="demo-editor-note" hidden>Demonstração: as alterações não serão enviadas para a loja.</p>
+      </div>
+      <div class="editor-footer"><button type="button" class="button ghost" id="cancel-editor">Cancelar</button><button type="submit" class="button primary" id="save-product">Salvar produto <span>✓</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog class="confirm-dialog" id="delete-dialog" aria-labelledby="delete-title"><form id="delete-form"><span class="delete-mark" aria-hidden="true">×</span><h2 id="delete-title">Excluir este produto?</h2><p id="delete-description"></p><p class="field-hint">Você também pode apenas ocultá-lo usando “Mostrar na loja”.</p><p class="form-error" id="delete-error" role="alert" hidden></p><div class="confirm-actions"><button type="button" class="button ghost" id="cancel-delete">Manter produto</button><button type="submit" class="button danger" id="confirm-delete">Excluir produto</button></div></form></dialog>
+  <div class="admin-toast" id="admin-toast" role="status" aria-live="polite"></div>
+  <noscript>Ative o JavaScript para usar o painel.</noscript>
+</body>
+</html>
