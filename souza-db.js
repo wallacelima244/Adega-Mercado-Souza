@@ -20,11 +20,14 @@
     });
     return client;
   }
-  function safeImage(value) {
+  function safeImage(value, productId) {
+    const embedded = window.SOUZA_IMAGENS?.[productId];
+    if (embedded && /^assets\/products\//.test(String(value || ''))) return embedded;
+    if (embedded && !value) return embedded;
     const text = String(value || '');
-    if (/^assets\/products\/[a-zA-Z0-9_.-]+\.(png|jpe?g|webp)$/.test(text)) return text;
+    if (/^assets\/products\/[a-zA-Z0-9_.-]+\.(png|jpe?g|webp)$/.test(text)) return embedded || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22 viewBox=%220 0 300 400%22%3E%3Crect width=%22300%22 height=%22400%22 fill=%22%23eaf0f5%22/%3E%3Ctext x=%22150%22 y=%22200%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23092b55%22%3EMercado Souza%3C/text%3E%3C/svg%3E';
     try { const parsed = new URL(text); if (parsed.protocol === 'https:' && !parsed.username && !parsed.password) return parsed.href; } catch {}
-    return 'assets/product-placeholder.svg';
+    return 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22 viewBox=%220 0 300 400%22%3E%3Crect width=%22300%22 height=%22400%22 fill=%22%23eaf0f5%22/%3E%3Ctext x=%22150%22 y=%22200%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23092b55%22%3EMercado Souza%3C/text%3E%3C/svg%3E';
   }
   function validateProduct(input) {
     const allowed = new Set(categories.map(([id]) => id));
@@ -37,7 +40,7 @@
     if (!allowed.has(input.category)) throw new Error('Escolha uma categoria válida.');
     if (!Number.isInteger(input.price) || input.price < 1 || input.price > 10000000) throw new Error('Informe um preço entre R$ 0,01 e R$ 100.000,00.');
     if (!unit || unit.length > 60) throw new Error('Informe a unidade de venda, com até 60 caracteres.');
-    if (image && safeImage(image) === 'assets/product-placeholder.svg') throw new Error('Use uma foto enviada pelo painel ou um endereço HTTPS válido.');
+    if (image && safeImage(image) === 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22 viewBox=%220 0 300 400%22%3E%3Crect width=%22300%22 height=%22400%22 fill=%22%23eaf0f5%22/%3E%3Ctext x=%22150%22 y=%22200%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23092b55%22%3EMercado Souza%3C/text%3E%3C/svg%3E') throw new Error('Use uma foto enviada pelo painel ou um endereço HTTPS válido.');
     return { name, detail, category: input.category, price: input.price, unit, image_url: image,
       active: !!input.active, available: !!input.available, featured: !!input.featured,
       position: Math.max(0, Math.min(100000, Math.trunc(Number(input.position) || 0))) };

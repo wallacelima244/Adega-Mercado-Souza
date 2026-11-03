@@ -100,7 +100,7 @@
     $('#product-rows').innerHTML = filtered.map(p => {
       const statusLabel = !p.active ? 'Oculto' : p.available ? 'À venda' : 'Esgotado';
       const statusClass = !p.active ? 'hidden-status' : p.available ? '' : 'soldout';
-      const photo = demo && String(p.image_url).startsWith('blob:') ? p.image_url : db.safeImage(p.image_url);
+      const photo = demo && String(p.image_url).startsWith('blob:') ? p.image_url : db.safeImage(p.image_url, p.id);
       return `<tr><td><div class="product-cell"><img class="product-thumb" src="${esc(photo)}" alt="" loading="lazy"><div><strong>${esc(p.name)}${p.featured ? '<span class="star" title="Em destaque">★</span>' : ''}</strong><small>${esc(p.detail || p.unit)}</small></div></div></td><td><span class="category-tag">${esc(labels.get(p.category))}</span></td><td class="price-cell">${money(p.price)}</td><td><span class="status-tag ${statusClass}">${statusLabel}</span></td><td><div class="row-actions"><button data-edit="${esc(p.id)}" aria-label="Editar ${esc(p.name)}">Editar</button><button class="delete-button" data-delete="${esc(p.id)}" aria-label="Excluir ${esc(p.name)}" title="Excluir produto">×</button></div></td></tr>`;
     }).join('');
     $('#product-table').hidden = filtered.length === 0;
@@ -122,7 +122,7 @@
     }
     for (const name of ['active','available','featured']) form.elements[name].checked = product ? product[name] : name !== 'featured';
     $('#product-photo').value = '';
-    $('#photo-preview').src = db.safeImage(imageUrl);
+    $('#photo-preview').src = db.safeImage(imageUrl, product?.id || editing);
     $('#editor-title').textContent = product ? 'Editar produto' : 'Novo produto';
     $('#save-product').textContent = demo ? 'Aplicar na demonstração ✓' : 'Salvar produto ✓';
     showError('#editor-error','');

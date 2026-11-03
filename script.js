@@ -20,7 +20,7 @@ const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerC
 const icon=id=>`<svg aria-hidden="true"><use href="#${id}-icon"/></svg>`;
 const wa=text=>`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
 const fallback='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450"><rect width="300" height="450" fill="#edf1f5"/><text x="150" y="225" text-anchor="middle" font-family="Arial" font-size="16" fill="#60758b">Imagem indisponível</text></svg>');
-const photo=id=>window.SouzaDB.safeImage(byId.get(id)?.image_url||'');
+const photo=id=>window.SouzaDB.safeImage(byId.get(id)?.image_url||'',id);
 const motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
 let category='all',cart=Object.create(null),toastTimer;
 const selected=new Map();
@@ -85,7 +85,7 @@ async function refreshCatalog(requireReview=false){
     PRODUCTS=data;byId=new Map(data.map(p=>[p.id,p]));catalogReady=true;
     for(const id of Object.keys(cart)){if(!byId.has(id)||!byId.get(id).available)delete cart[id];}
     save();invalidateMessage();renderProducts();renderFeatured();renderCart();
-    $$('[data-product-image]').forEach((img,index)=>{const candidates=data.filter(p=>p.available);const p=byId.get(img.dataset.productImage)||candidates[index%candidates.length];img.src=p?photo(p.id):'assets/product-placeholder.svg';img.alt=p?.name||'Bebidas do Mercado Souza';});
+    $$('[data-product-image]').forEach((img,index)=>{const candidates=data.filter(p=>p.available);const p=byId.get(img.dataset.productImage)||candidates[index%candidates.length];img.src=p?photo(p.id):window.SouzaDB.safeImage('');img.alt=p?.name||'Bebidas do Mercado Souza';});
     status.hidden=true;
     const after=JSON.stringify(entries().map(([id,q])=>[id,q,byId.get(id)?.price]));
     const changed=before!==after;
@@ -105,4 +105,4 @@ async function refreshCatalog(requireReview=false){
  return result.ok&&!(requireReview&&result.changed);
 }
 if(window.SouzaDB.configured){refreshCatalog();setInterval(()=>{if(!document.hidden)refreshCatalog();},60000);}
-document.addEventListener('error',event=>{if(event.target instanceof HTMLImageElement&&event.target.getAttribute('src')!=='assets/product-placeholder.svg')event.target.src='assets/product-placeholder.svg';},true);
+document.addEventListener('error',event=>{if(event.target instanceof HTMLImageElement&&event.target.getAttribute('src')!==window.SouzaDB.safeImage(''))event.target.src=window.SouzaDB.safeImage('');},true);

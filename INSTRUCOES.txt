@@ -1,0 +1,9 @@
+MERCADO SOUZA - IMAGENS INCORPORADAS
+
+1. Envie TODOS os arquivos desta pasta para a raiz do repositorio GitHub, sem renomear.
+2. A Vercel deve publicar index.html e admin.html na mesma pasta.
+3. As imagens antigas estao dentro de imagens-incorporadas.js. Nao e necessario assets/products.
+4. A biblioteca Supabase carrega pelo CDN jsDelivr. O banco e a configuracao publica permanecem iguais.
+5. Fotos NOVAS enviadas pelo painel continuam usando o Storage do Supabase.
+6. Teste a loja e o painel apos o deploy.
+7. A permissao de login ADM ainda precisa estar liberada no Supabase.
