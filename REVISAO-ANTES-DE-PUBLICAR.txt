@@ -1,0 +1,9 @@
+REVISÃO PRÉ-PUBLICAÇÃO — MERCADO SOUZA
+
+Alterações: textos gerais do mercado; confirmação de maioridade somente em categorias potencialmente alcoólicas; categorias dinâmicas e ícones SVG; agrupamento das categorias no painel ADM; rodapé com aviso específico para bebidas alcoólicas.
+
+ATENÇÃO: A identificação de bebida alcoólica ainda depende da categoria. Combos ou coquetéis sem álcool podem exigir confirmação de idade. Para precisão por produto, futuramente é recomendado campo booleano "contém álcool" no banco e painel.
+
+Não foram alterados preços, produtos ou dados do Supabase. Nenhuma migração de banco necessária para esta revisão.
+
+Publique os arquivos do pacote mantendo a estrutura na raiz do repositório. Teste login ADM, cadastro de produto com foto, carrinho de alimento, carrinho com álcool, pedido WhatsApp, responsividade e imagens em produção.

@@ -297,9 +297,12 @@
     } catch (error) { showError('#dashboard-error',errorText(error)); }
     finally { busy = false; loadingButton($('#import-products'),false,'Importar catálogo atual'); }
   };
-  const options = db.categories.map(([id,label]) => `<option value="${id}">${esc(label)}</option>`).join('');
-  form.elements.category.innerHTML = options;
-  $('#category-filter').insertAdjacentHTML('beforeend',options);
+  const drinks = db.categories.filter(([id]) => !id.startsWith('food-'));
+  const foods = db.categories.filter(([id]) => id.startsWith('food-'));
+  const optionHtml = items => items.map(([id,label]) => `<option value="${id}">${esc(label)}</option>`).join('');
+  const groupedOptions = `<optgroup label="Bebidas">${optionHtml(drinks)}</optgroup><optgroup label="Alimentos e mercearia">${optionHtml(foods)}</optgroup>`;
+  form.elements.category.innerHTML = groupedOptions;
+  $('#category-filter').insertAdjacentHTML('beforeend',groupedOptions);
   $('#setup-note').hidden = db.configured;
   $('#login-submit').disabled = !db.configured;
   $('#login-form').querySelectorAll('input').forEach(input => input.disabled = !db.configured);

@@ -1,0 +1,1 @@
+Categorias com icones SVG proprios e exibicao automatica conforme produtos disponiveis no Supabase. Nenhum produto foi cadastrado. Publicar index.html, script.js e style.css juntos. Demais arquivos preservados.

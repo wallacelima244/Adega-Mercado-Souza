@@ -47,7 +47,7 @@
       <span class="sidebar-label">GERENCIAR</span>
       <div class="sidebar-selected"><span aria-hidden="true">▦</span> Produtos <span class="nav-dot"></span></div>
       <a class="sidebar-link" href="index.html" target="_blank" rel="noopener">Ver minha loja <span>↗</span></a>
-      <div class="sidebar-tip"><span class="tip-mark">↗</span><strong>Chegou novidade?</strong><p>Cadastre a bebida e ela já pode aparecer no catálogo.</p><button class="text-button" data-new>Adicionar produto →</button></div>
+      <div class="sidebar-tip"><span class="tip-mark">↗</span><strong>Chegou novidade?</strong><p>Cadastre bebidas ou alimentos e eles já podem aparecer no catálogo.</p><button class="text-button" data-new>Adicionar produto →</button></div>
       <div class="sidebar-account"><span class="avatar">S</span><div><strong>Administrador</strong><small id="account-email"></small></div><button id="logout" class="icon-button" aria-label="Sair do painel" title="Sair">↪</button></div>
     </aside>
     <div class="workspace">
@@ -60,7 +60,7 @@
         <div id="import-note" class="notice import-notice" hidden><div><strong>Vamos trazer os produtos da sua loja?</strong><p>Importe as 45 opções da última versão, com fotos e preços. Isso é feito uma única vez.</p></div><button class="button secondary" id="import-products">Importar catálogo atual</button></div>
         <section class="catalog-panel" aria-labelledby="products-title">
           <div class="panel-heading"><h2 id="products-title">Todos os produtos <span id="product-count">0</span></h2><button class="text-button" id="refresh-products">↻ Atualizar</button></div>
-          <div class="filters"><label class="admin-search"><span aria-hidden="true">⌕</span><input type="search" id="product-search" placeholder="Buscar pelo nome da bebida…" aria-label="Buscar produtos"></label><select id="category-filter" aria-label="Filtrar por categoria"><option value="all">Todas as categorias</option></select><select id="status-filter" aria-label="Filtrar por situação"><option value="all">Todas as situações</option><option value="available">À venda</option><option value="soldout">Esgotados</option><option value="hidden">Ocultos</option><option value="featured">Em destaque</option></select></div>
+          <div class="filters"><label class="admin-search"><span aria-hidden="true">⌕</span><input type="search" id="product-search" placeholder="Buscar pelo nome do produto…" aria-label="Buscar produtos"></label><select id="category-filter" aria-label="Filtrar por categoria"><option value="all">Todas as categorias</option></select><select id="status-filter" aria-label="Filtrar por situação"><option value="all">Todas as situações</option><option value="available">À venda</option><option value="soldout">Esgotados</option><option value="hidden">Ocultos</option><option value="featured">Em destaque</option></select></div>
           <div id="loading-products" class="loading-products" role="status">Carregando seus produtos…</div>
           <div class="table-scroll"><table id="product-table"><thead><tr><th scope="col">Produto</th><th scope="col">Categoria</th><th scope="col">Preço</th><th scope="col">Situação</th><th scope="col"><span class="sr-only">Ações</span></th></tr></thead><tbody id="product-rows"></tbody></table></div>
           <div class="empty-products" id="empty-products" hidden><span aria-hidden="true">▦</span><h3>Nenhum produto por aqui</h3><p id="empty-description">Cadastre o primeiro produto para começar.</p><button class="button secondary" data-new>Adicionar produto</button></div>

@@ -41,3 +41,10 @@
  transform:translateY(-3px);border-color:rgb(255 255 255 / .8);
  box-shadow:0 14px 30px rgb(9 43 85 / .27),inset 0 1px 0 rgb(255 255 255 / .65);
 }
+
+/* Categorias visíveis apenas quando há produtos disponíveis */
+.categories{display:flex;flex-wrap:wrap;align-items:flex-start;gap:18px;overflow:visible;padding-bottom:17px}
+.category-group{min-width:0;max-width:100%}
+.category-group-title{font-size:11px;font-weight:800;letter-spacing:.6px;color:#60758b;margin:0 0 9px 4px}
+.category-group-items{display:flex;flex-wrap:wrap;gap:10px}
+@media(max-width:760px){.categories{gap:15px}.category-group{width:100%}}
