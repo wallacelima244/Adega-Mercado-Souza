@@ -6,7 +6,7 @@ const INSTAGRAM="https://www.instagram.com/mercado___souza/";
 const MAP_URL="https://www.google.com/maps/search/?api=1&query=Rua%20Souza%2C%2063B%20-%20Vila%20Amaral%20-%20Santana%20de%20Parna%C3%ADba%20-%20SP";
 const DIRECTIONS_URL="https://www.google.com/maps/dir/?api=1&destination=Rua%20Souza%2C%2063B%20-%20Vila%20Amaral%20-%20Santana%20de%20Parna%C3%ADba%20-%20SP";
 const KEY='souza-delivery-animado-v1';
-const CATEGORIES=[['all','Todos'],['combos','Combos'],['beer','Cervejas'],['spirits','Destilados'],['gin','Gin'],['liqueurs','Ballena'],['energy','Energéticos'],['wine','Vinhos'],['cocktail','Coquetéis'],['drinks','Copão'],['soft','Refrigerantes'],['other','Churrasco'],['food-grocery','Mercearia'],['food-snacks','Salgadinhos'],['food-sweets','Doces e chocolates'],['food-bakery','Padaria'],['food-frozen','Congelados'],['food-dairy','Frios e laticínios'],['food-other','Outros alimentos']];
+const CATEGORIES=[['all','Todos'],['combos','Combos'],['beer','Cervejas'],['spirits','Destilados'],['gin','Gin'],['liqueurs','Ballena'],['energy','Energéticos'],['wine','Vinhos'],['cocktail','Coquetéis'],['drinks','Copão'],['soft','Refrigerantes'],['other','Churrasco'],['food-grocery','Mercearia'],['food-snacks','Salgadinhos'],['food-sweets','Doces e chocolates'],['food-bakery','Padaria'],['food-frozen','Congelados'],['food-dairy','Frios e laticínios'],['food-butcher','Açougue'],['food-other','Outros alimentos']];
 // Preços em centavos: 19000 equivale a R$ 190,00.
 let PRODUCTS=window.SouzaDB?.configured?[]:(window.SOUZA_CATALOGO_INICIAL||[]).map(p=>({...p}));
 let catalogReady=!window.SouzaDB?.configured, refreshInFlight=null;

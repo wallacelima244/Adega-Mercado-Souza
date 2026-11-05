@@ -11,7 +11,7 @@
     ['gin', 'Gin'], ['liqueurs', 'Ballena e licores'], ['energy', 'Energéticos'],
     ['wine', 'Vinhos'], ['cocktail', 'Coquetéis'], ['drinks', 'Copão'],
     ['soft', 'Refrigerantes'], ['other', 'Churrasco'],
-    ['food-grocery', 'Mercearia'], ['food-snacks', 'Salgadinhos'], ['food-sweets', 'Doces e chocolates'], ['food-bakery', 'Padaria'], ['food-frozen', 'Congelados'], ['food-dairy', 'Frios e laticínios'], ['food-other', 'Outros alimentos']
+    ['food-grocery', 'Mercearia'], ['food-snacks', 'Salgadinhos'], ['food-sweets', 'Doces e chocolates'], ['food-bakery', 'Padaria'], ['food-frozen', 'Congelados'], ['food-dairy', 'Frios e laticínios'], ['food-butcher', 'Açougue'], ['food-other', 'Outros alimentos']
   ];
   function getClient() {
     if (!configured) throw new Error('A conexão ainda não foi configurada. Siga o guia COMECE-AQUI.html.');

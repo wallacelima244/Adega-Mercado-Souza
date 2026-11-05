@@ -72,3 +72,5 @@
   .categories{gap:13px}
   .category-group-items{margin-right:-12px;padding-right:12px}
 }
+
+.category[data-category="food-butcher"] .category-icon{color:#a34d4d;background:#fff0ef}
