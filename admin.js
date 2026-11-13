@@ -140,20 +140,42 @@
     if (file.size > 15 * 1024 * 1024) throw new Error('A foto é muito grande. Escolha uma imagem de até 15 MB.');
     const objectUrl = URL.createObjectURL(file);
     try {
-      const image = new Image(); image.src = objectUrl;
+      const image = new Image();
+      image.src = objectUrl;
       await image.decode();
-      const scale = Math.min(1, 1600 / Math.max(image.naturalWidth, image.naturalHeight));
+      const scale = Math.min(1, 1000 / Math.max(image.naturalWidth, image.naturalHeight));
       const canvas = document.createElement('canvas');
       canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
       canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-      canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', .85));
-      if (!blob || blob.size > 5 * 1024 * 1024) throw new Error('Não foi possível ajustar a foto. Escolha outra imagem menor.');
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Não foi possível preparar a foto neste navegador.');
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      const encode = (type, quality) => new Promise(resolve => canvas.toBlob(resolve, type, quality));
+      let blob = await encode('image/webp', 0.8);
+      // Browsers may silently substitute PNG when they cannot encode WebP.
+      // Fall back to JPEG so new photos are not stored as large PNG files.
+      if (!blob || blob.type !== 'image/webp') {
+        context.globalCompositeOperation = 'destination-over';
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.globalCompositeOperation = 'source-over';
+        blob = await encode('image/jpeg', 0.8);
+      }
+      if (!blob || !['image/webp','image/jpeg'].includes(blob.type)) {
+        throw new Error('Este navegador não conseguiu comprimir a foto. Tente novamente em outro navegador.');
+      }
+      if (blob.size > 1024 * 1024) {
+        const smaller = await encode(blob.type, 0.65);
+        if (smaller && smaller.type === blob.type && smaller.size < blob.size) blob = smaller;
+      }
+      if (blob.size > 5 * 1024 * 1024) throw new Error('A foto continua muito grande. Escolha uma imagem menor.');
       return blob;
     } catch (error) {
       if (error?.name === 'EncodingError') throw new Error('Não foi possível abrir esta foto. Tente outra imagem.');
       throw error;
-    } finally { URL.revokeObjectURL(objectUrl); }
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
   }
   async function uploadPhoto(blob) {
     const client = db.getClient();
