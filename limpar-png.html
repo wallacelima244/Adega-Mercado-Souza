@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Limpeza de imagens antigas | Mercado Souza</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#22364d;background:#f2f5f9}
+*{box-sizing:border-box}
+body{margin:0}
+main{max-width:780px;margin:28px auto;padding:0 20px 50px}
+header{background:#092b55;color:white;border-radius:18px;padding:27px}
+h1{font-size:clamp(24px,5vw,32px);margin:6px 0 12px}h2{font-size:20px}
+section{background:#fff;border:1px solid #dae3ef;border-radius:16px;margin-top:16px;padding:24px}
+label{display:block;margin:14px 0;font-weight:600}
+input{display:block;width:100%;padding:12px;font:inherit;border:1px solid #c5d2e1;border-radius:8px;margin-top:6px}
+button{cursor:pointer;background:#092b55;color:#fff;border:0;padding:12px 18px;font:inherit;font-weight:700;border-radius:10px}
+button[disabled]{cursor:not-allowed;opacity:.52}
+#remove{background:#9d241f}
+p{line-height:1.6}small,footer{color:#65758b}
+.ok{color:#0b754e}.warn{color:#9d241f}
+#log{background:#f4f6fa;padding:12px;border-radius:10px;white-space:pre-wrap;max-height:220px;overflow:auto;font-size:12px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+progress{width:100%;height:16px}
+</style>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script defer src="config.js"></script>
+<script defer src="souza-db.js"></script>
+</head>
+<body>
+<main>
+<header><small style="color:#a8c4e7">MANUTENÇÃO INTERNA • MERCADO SOUZA</small><h1>Limpeza dos PNGs antigos</h1>
+<p>Uso exclusivo da administração. Os arquivos JPEG e WebP atualmente utilizados pelos produtos não são removidos.</p></header>
+<section id="login-section">
+<h2>Acesso do administrador</h2><p>Entre com o mesmo acesso utilizado no painel de produtos.</p>
+<form id="login-form"><label>E-mail<input name="email" type="email" autocomplete="username" required></label>
+<label>Senha<input name="password" type="password" autocomplete="current-password" required></label>
+<button type="submit">Entrar com segurança</button></form>
+<p id="login-error" class="warn" role="alert"></p>
+</section>
+<section id="cleanup-section" hidden>
+<h2>Backup externo verificado</h2>
+<p>Uma cópia íntegra dos <strong>228 PNGs (376,42 MB)</strong> já foi salva em um Drive separado na Vercel. Esta etapa exclui somente os arquivos originais previstos no backup.</p>
+<p id="summary">Conferindo catálogo e imagens...</p>
+<div class="row"><button id="recheck">Verificar novamente</button><button id="remove" disabled>Excluir PNGs antigos com segurança</button></div>
+<progress id="progress" max="228" value="0"></progress>
+<p id="status" role="status">Nenhuma exclusão iniciada.</p>
+<h2>Registro</h2><pre id="log"></pre>
+</section>
+<footer style="padding:16px">Ferramenta separada do painel de produtos. Não modifica preços, nomes ou descrições.</footer>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+'use strict';
+const BUCKET='souza-produtos';
+const BACKED_UP=new Set(["produtos/02a1c8a8-e275-4b43-a25b-f29e5615b276.png","produtos/03475e58-a93c-495f-ac27-30fd1be8ff30.png","produtos/0354db8a-0e61-4131-b6a1-129ef0de9738.png","produtos/07645812-1a22-4f47-b37c-36bddf55c567.png","produtos/07edb0b1-8da2-41b0-9234-8f9d63bfc48d.png","produtos/093160e6-7163-4b83-bd01-55b34c5d21e6.png","produtos/098fbe0e-235f-4d65-8ff7-0e1d9f27dc1e.png","produtos/0a2bb6b8-f374-48c8-9f2d-c8b1e3ccfd3b.png","produtos/0c9197fb-db9a-411b-a224-f3c2b31c5cb0.png","produtos/0cb2e6df-d354-414e-8f4f-e027d82b6356.png","produtos/0efcdd83-3575-4ffd-8867-96e59f9411f1.png","produtos/0f4413e7-8471-4ec6-a421-a177ea876c6b.png","produtos/113187e8-26ce-4d61-a0b3-8fa0fb25b7db.png","produtos/14f80b7d-173f-434e-b289-7795235bbe8f.png","produtos/18a16da8-9bfc-4674-81a4-fac945ab6fee.png","produtos/18acf631-cbfa-4c59-9ba8-afc7fd32021c.png","produtos/197b3ab5-174e-4506-8fa3-c42be8117ec0.png","produtos/19f695da-dd41-4a48-969b-52e5cac0fc0b.png","produtos/1aa01aa8-51bb-4cd5-b164-7d9469c91023.png","produtos/1aa8ebf7-2f18-4582-af81-5d7d4f7e71bd.png","produtos/1ef784f1-8482-4074-ae94-c4d47abc69be.png","produtos/1f3ab4c7-2014-48a0-a93c-1989a4763bec.png","produtos/21609824-b3e9-4b6c-a058-92eb9df76000.png","produtos/21a12e37-ed83-408f-8e7f-26c9fe04cf82.png","produtos/21e87529-f5a0-4003-95bc-cbd73ccc8859.png","produtos/21ef45ff-4859-4ccb-9fde-63471abb36b0.png","produtos/24db1c14-e847-48b8-b99c-20c52b1c8a05.png","produtos/24f07e7a-4313-46e4-a301-1ced045440f1.png","produtos/2510e01b-146f-444e-add3-0dc399fd57bf.png","produtos/25369501-944c-4e4e-9e7f-0df133ed965f.png","produtos/25a43ba8-80cc-43ce-86cd-7f0f0cd2e257.png","produtos/274f9e9b-4ab8-4c43-b6e2-e47cebabe2ac.png","produtos/2873b9db-b79e-4980-8182-226de4fcd6f6.png","produtos/2ace68ea-1b60-4f65-9a17-5319385063a2.png","produtos/2d23f592-2217-4f45-95e7-2bac7ce9e3ea.png","produtos/2d89c411-a160-4df6-b723-4c89632053fe.png","produtos/2e59a42e-71ba-498c-bd11-83b893fe4818.png","produtos/2f103df1-1c91-4592-8e91-6a44570adf3a.png","produtos/2fa04341-dc26-4689-96ac-c6616dc6d0dc.png","produtos/3275b4c0-648e-4ec7-9f6a-a061b6c2edbf.png","produtos/32cf9a82-a681-400b-b9f1-b3bd370477c8.png","produtos/332f47e2-9926-4663-aae5-3df9176dacc8.png","produtos/343bdd3e-2972-4582-b892-86c0269bd147.png","produtos/345594b4-78e9-420d-b2de-fbc14dfa4007.png","produtos/34aef352-d65a-4b40-a840-708dec52f6ef.png","produtos/34b68a65-f52c-446b-acc5-3cf8881a7cf2.png","produtos/35e01210-79b6-4fd2-af7c-81ab6055059d.png","produtos/36542384-51c5-4b6b-981a-a7f7e37b7192.png","produtos/36617e60-cd93-40a5-82bf-0cfd34f9efb5.png","produtos/369b6c66-9bbb-41bb-a722-9bec0a716180.png","produtos/3783c892-8bbe-475d-8c9b-adad65689a68.png","produtos/3a35cf9b-df45-407f-908e-f6948cb40eb1.png","produtos/3aff014f-8be8-425f-9262-0f3d189108c7.png","produtos/3be37e67-ebc1-4390-b59d-7c1df93fad3b.png","produtos/3cb31c84-6832-4b49-8444-dfd6dcf0a742.png","produtos/3d2fb435-4574-4ffe-9630-c63156d1b99e.png","produtos/3d4c014e-3ca4-4c0d-bf38-3a7a46913264.png","produtos/3da36f39-03a6-4c63-8edc-848ffaed57ed.png","produtos/3de80dcf-dc1b-4b8e-bf22-0627a6d47fc1.png","produtos/3f670b61-1b29-4340-98cf-b109e63f8bb0.png","produtos/3f79df30-67c0-4139-a352-1deb95ce2c99.png","produtos/3ffbebed-4d55-4c89-906c-42810e0b3178.png","produtos/40ba9484-1e23-49cc-b121-88ee60536cb8.png","produtos/412a4fdd-7ab7-46fc-a76e-a95d0e31be3f.png","produtos/42046798-969c-4e23-b94b-8b3c4955e55e.png","produtos/4241e861-d207-4a5c-b60d-0f44b0b869fb.png","produtos/42c8ef77-7323-44ee-88c0-53949e65a354.png","produtos/43022e45-3fbc-48b9-a6c5-03dc50c8e29e.png","produtos/43893ae1-a0d0-44af-b5b1-76f5be7dc5ec.png","produtos/43b383a1-a434-447f-84cf-f9886e643f22.png","produtos/43cfc17f-b093-4e9d-bc51-2ed6534e515c.png","produtos/46cda6c1-2a3f-4899-835d-813468fdd7f7.png","produtos/47c27604-ec56-4b97-ae05-860e144f6271.png","produtos/47e677e1-9810-4cb8-b84f-ca07b690cfdf.png","produtos/493f4487-5150-447a-a24c-5ad2f1cebee0.png","produtos/49f007fd-469e-4407-825c-3052d26c5382.png","produtos/4a8198bf-8065-48c4-b81c-030da68e3e30.png","produtos/4b5920ab-bdc6-4517-8897-22e9886617a1.png","produtos/4b599ab8-7cc4-4878-aa9c-6f88a689bca2.png","produtos/4be07094-b780-4bfc-9fa5-a9cac84f1ac1.png","produtos/4d402830-dc99-42c5-ab4e-6d84ec97d8e1.png","produtos/4f8cdd71-15e9-4123-a93d-60d242c33fec.png","produtos/50346b28-7da1-4509-bfa1-6dd4b9c672e0.png","produtos/515da445-9a16-4a31-9366-6fddbeaa7577.png","produtos/554ecffe-22d3-431a-8c3b-2bb9275ee87c.png","produtos/569f3c15-e33e-46b6-b9f8-e2274c9fb2d0.png","produtos/58b90722-d98a-4da1-85aa-2626031baa09.png","produtos/5a8a2f64-5f92-43e9-b0d8-4c80b1a8cf79.png","produtos/5adbe0d2-f3ca-4e58-ba61-a68ccd929d82.png","produtos/5b3c7359-a533-4133-bf23-737ce07d520a.png","produtos/5cefaf48-098b-44ba-8f88-56a15b2b2c1c.png","produtos/5e4fb1b0-2767-4a80-8a9c-70d2b246300c.png","produtos/5e9e576b-e586-4fb5-9faf-98885146bbd6.png","produtos/5f420c9d-80b3-45de-96f2-f325784d4422.png","produtos/601b8fdc-265f-48e5-be16-e8b46e4696b7.png","produtos/618f437e-21a4-4f46-aedb-fdcc3f45d5ca.png","produtos/65c1b8ae-cfac-4a18-a2c5-0a57cd836995.png","produtos/66faaba1-d342-4c98-b643-43af8329686c.png","produtos/6967bdeb-4531-4e4c-b4c5-28e3444cedd6.png","produtos/6b646d08-988d-4349-8c41-01876c48aa95.png","produtos/6b6b0a2d-a20d-40dd-a0f4-b17c059eb27a.png","produtos/6bd62a7c-db91-4619-bb6d-6da4d53fc788.png","produtos/6c3d3191-894c-41af-aa28-5f8fd4265ea0.png","produtos/6dbd7b3b-79e3-4f87-b7c2-0fd19bf700d5.png","produtos/6f1c602b-db7d-4506-b77b-ebe3d7adba07.png","produtos/702dfda3-6e9a-45d7-91bf-c2304963d144.png","produtos/7147a712-32fb-438f-a55e-29d29d683a09.png","produtos/74f7df1f-83d1-464f-ab75-38e1455c1c19.png","produtos/75f3c292-c6e8-49e3-845e-1a0a8a9c9209.png","produtos/779c61ef-bf39-4e3d-ae4d-da49b03b8bc7.png","produtos/78bbc603-467a-4542-ad44-5a34e2959734.png","produtos/78f2e702-b3eb-4bd8-aa1e-bf31c19d8ff7.png","produtos/7973f634-b762-434f-a2e0-28e8b13d9238.png","produtos/7a72b267-923d-4d99-896c-c3eaab9413ac.png","produtos/7b47e068-6237-4dd1-a5e9-253e35e21203.png","produtos/7cb50a81-00ee-409e-ab06-df0f100015aa.png","produtos/7e5745af-144e-493c-9b81-d23cc89e4162.png","produtos/7f30ef0d-7eda-406a-92c9-f3a3b32272a4.png","produtos/7f3b0773-cd8a-4681-aa93-55425f5728d4.png","produtos/7f705450-1aa4-498c-8742-d7a6ea4102d0.png","produtos/81dad787-cea3-4861-8475-0bd3ebb4d5a3.png","produtos/8339fadf-7798-452f-91f3-96c610443b89.png","produtos/834e3dc2-0523-4f3e-93e1-c4649d519671.png","produtos/86da6ff8-6c7d-4127-abc8-40f2f58d1dc8.png","produtos/8a22b874-022f-4d43-bbee-defab3541a3f.png","produtos/8b0d47f3-91aa-4000-bf8a-905f0b8e11e7.png","produtos/8da6b26a-88f2-41a4-b8d8-f060114b4a76.png","produtos/8e017637-a2af-430f-abc1-3b70152f8f12.png","produtos/8e47780b-3ae0-448e-acce-a832bee8b352.png","produtos/907fd644-a404-47bc-8527-1910e93eb18b.png","produtos/91e8bbc1-d7ec-4795-868c-a64862562ff4.png","produtos/9293f7a0-55d7-4a4c-a433-92ad175ec448.png","produtos/933743e7-317f-485b-a6a4-08574a5153f0.png","produtos/93bdeeef-c022-4e2d-a74f-7669921e38c4.png","produtos/940d3335-f03e-410e-a238-ee545fb22ac8.png","produtos/95f7f811-79ce-436c-8f3f-8e1b289d8d95.png","produtos/9885eae8-1dab-48ac-ad81-65d0600fbfb3.png","produtos/997ecb84-c706-46db-abfa-8e897a18c302.png","produtos/9af23133-4b24-45a8-8155-4219adac6148.png","produtos/9c6512ca-63fe-4123-854b-d19168f4a84b.png","produtos/9cb047e0-6e58-4837-920c-130306b51a5f.png","produtos/9d5a907b-7a9a-4887-bb3a-22d79f433ad7.png","produtos/9e2ec9e5-1881-4062-952f-67d96be9cc3d.png","produtos/9e94ed22-1985-4120-a33f-6c5cd7dd5fe5.png","produtos/9ee4c444-9f2c-4a27-9530-27baec6f8e8a.png","produtos/9ef17b8c-e6ed-4254-8ad3-bbd2de176ada.png","produtos/9fb15bdc-492b-4593-aa88-e0d0edb21a1c.png","produtos/a187412a-f5fd-41d2-805a-2c46eca1cd53.png","produtos/a2252c6f-b9da-4ead-9471-76eff7759de7.png","produtos/a3b0cece-c64b-4164-a8dd-2274fcef1eed.png","produtos/a3d36407-f8d7-455f-97e5-ffdc7e4078c6.png","produtos/a4a0f3eb-f501-4207-8bbb-c9b31659fd5a.png","produtos/a5189e49-63a3-455c-8535-16e0dd6276bb.png","produtos/a65070c2-143b-4021-b74c-5076e1a8687b.png","produtos/a736f6d0-ab3f-4cfb-9d52-14ea6f0028be.png","produtos/a8237bf2-72b1-4a1e-bb4c-42e5262afaf5.png","produtos/a937a339-6184-475b-8b3d-b5c1cfa8f2aa.png","produtos/a965051f-6648-44b3-bcc7-e9e02997501b.png","produtos/aa4fd7cf-2a92-488a-86b7-8cbf1f2b6303.png","produtos/aac99d72-80fa-4439-b804-4317d81558e6.png","produtos/ab0de89d-af57-4688-973a-7d1b6aef6bbe.png","produtos/ab163e39-96ef-4901-a707-ef7f0341f9a8.png","produtos/ab719c81-5c2a-4ea2-87d0-e0cc5c12f359.png","produtos/abd98a9d-93b0-4e39-9ced-fc560e2966b5.png","produtos/ac0ac054-976f-48a6-9e8d-43f557fac365.png","produtos/b46f5ea7-805f-4279-b1b8-dcfd9d046c39.png","produtos/b55a45be-e02f-4c7d-aa01-48bf9473878f.png","produtos/b56a1738-2dc7-4cf8-818b-45efd913e4f1.png","produtos/b56ac233-729e-4451-8c3a-16fd80eb136e.png","produtos/b6ee6a6a-8bab-4f96-a0c4-df6fc687f46e.png","produtos/b73df1a3-51bb-440d-83ca-a5839229ab74.png","produtos/b9e54952-24e9-4d3f-9f6f-6c86ffb38fe4.png","produtos/bde65846-5531-4beb-aba6-158ab913c9c1.png","produtos/bf584161-b2f6-41b4-abbb-09439aecf530.png","produtos/c042f8b8-8fac-46f6-9402-e5c5d40b2214.png","produtos/c0abe000-5df6-442b-8fae-7e94d502882f.png","produtos/c6c0862f-b79a-4710-80a8-16d312f65e74.png","produtos/c992900c-5022-4aa8-bbc7-75853b524e4a.png","produtos/cc7b4916-227f-428f-9e64-046e9180a924.png","produtos/cd2f5b06-46f2-40d4-ba9d-42504102f785.png","produtos/cde04b33-b441-41d2-b77f-7bd29be75d53.png","produtos/cdf2f147-2f59-48b4-92a5-e909846ea48b.png","produtos/d24823db-4674-4a43-902c-c64c0f7f624b.png","produtos/d2f6e7b7-598d-444d-a6dd-979639ee6c89.png","produtos/d64e35d6-57c0-460b-a580-35a8aabc2d90.png","produtos/d698b209-b28e-4b60-90d6-7bf97da19c17.png","produtos/d7100882-b404-4f3d-980b-327b74ec6971.png","produtos/d7e8a553-4b02-4e21-b596-fb52b8d26ecd.png","produtos/d9c33ff2-4b97-4b40-867d-debb6230a431.png","produtos/da2be0cb-091b-4949-a510-03eb8d6f898d.png","produtos/da9eaf4d-53c6-4662-88c3-e2eb174dc3de.png","produtos/db5dac00-2646-4dbe-8824-3b2f5051db15.png","produtos/db74f547-1262-4b3b-a3fa-e14b36d3bcb8.png","produtos/db7c78d6-a884-4cc3-8200-a37cc02d6e6e.png","produtos/dc1e7c3f-f269-48b7-9747-ec028dc237db.png","produtos/df346579-25a0-4be3-8e02-b2b9ce999052.png","produtos/e06761b3-ab64-4aaf-b785-af9f9f237e5b.png","produtos/e07f2fc5-80cf-4e41-8f29-6dc4056707d1.png","produtos/e28002dd-2721-4e21-a7be-236a1eec4632.png","produtos/e452eb90-5b4b-4c83-b92f-e7ec20c2c0a2.png","produtos/e4b1a55b-4953-4e52-a83c-023fbf24e99d.png","produtos/e7cacda2-fe03-4a22-a84b-942ea174c8bc.png","produtos/ea563f62-a977-4684-ab90-76364d2d1463.png","produtos/ebf89c03-507a-4924-8583-134882f7c2ce.png","produtos/ed3f820c-f1bb-40aa-beb5-c8a6f593bbb3.png","produtos/ed8e5f65-0259-403d-b014-dbaf4f792dab.png","produtos/eda120c4-81b2-4502-b1ff-254146a5c13b.png","produtos/ee7881ff-c755-44e8-a9f1-72103ce029ea.png","produtos/ee7bab20-46ea-4132-aab5-12fe1445b573.png","produtos/f15569f7-4831-4ef2-812d-6ddd14b4261b.png","produtos/f2c628e6-2b77-4c53-a52b-ecb8726929e7.png","produtos/f320e889-773c-45bc-8661-5c2f5e3882de.png","produtos/f3398355-2dc8-45a8-992e-c30d4f778ed9.png","produtos/f4169f94-abfa-445c-b675-810483bc7397.png","produtos/f4c5438b-4a2d-4919-b59d-7a64b2df845b.png","produtos/f543593b-8914-430c-9a63-661bb104fb6f.png","produtos/f6b675b2-e649-4771-abdc-8e3d728ccc03.png","produtos/f7868431-b70c-4406-8318-8757d9247f19.png","produtos/f859c229-3045-4ddc-b519-33111192923d.png","produtos/f8ba8b93-b7fb-42b7-9ca0-c2ebf6d6815a.png","produtos/f9bf438a-aa8e-4e22-b62a-4d4d0408039d.png","produtos/fa27e46c-49b0-49e7-baa6-6b6259ea34a1.png","produtos/fb3c7d42-02e1-43e9-a8b8-c56505744c28.png","produtos/fb878a63-5718-4eaa-b52f-977d12f7bfe5.png","produtos/fc35387f-1e1a-478e-b47a-163f8102c6ec.png","produtos/fce54885-a581-4106-bdde-ed449575d7e0.png","produtos/ff1a1ab6-5356-4ca2-832c-e6bc23273bc7.png","produtos/fffd21f0-2450-464e-b35b-847f873fb665.png"]);
+const $=id=>document.getElementById(id);
+const db=window.SouzaDB?.getClient();
+const storage=db?.storage.from(BUCKET);
+let authorized=false,busy=false;
+let candidates=[];
+function log(s,error=false){const msg=new Date().toLocaleTimeString('pt-BR')+' • '+s; $('log').textContent+=msg+'\n';$('status').textContent=s;$('status').className=error?'warn':'ok'}
+function pathFromImage(src){
+  try{
+    const u=new URL(src),host=new URL(window.SOUZA_CONFIG.supabaseUrl);
+    const marker='/storage/v1/object/public/'+BUCKET+'/';
+    if(u.origin!==host.origin||!u.pathname.startsWith(marker))return null;
+    return decodeURIComponent(u.pathname.slice(marker.length));
+  }catch{return null}
+}
+async function admin(){
+  const {data,error}=await db.auth.getUser();
+  if(error||!data?.user)throw Error('Entre com uma conta de administrador.');
+  const {data:allowed,error:permissionError}=await db.rpc('souza_is_admin');
+  if(permissionError||allowed!==true)throw Error('Esta conta não tem autorização de administrador.');
+  authorized=true;$('login-section').hidden=true;$('cleanup-section').hidden=false;
+}
+async function verify(){
+  if(!authorized)throw Error('Administrador não verificado.');
+  const products=await window.SouzaDB.listProducts(true);
+  if(products.length<270)throw Error('Catálogo inesperadamente menor que o original. Exclusão cancelada.');
+  const refs=products.map(p=>pathFromImage(p.image_url)).filter(Boolean);
+  if(refs.some(path=>/\.png$/i.test(path)))throw Error('Uma foto PNG ainda está em uso. Não será apagada.');
+  const [root,optimized]=await Promise.all([
+    storage.list('produtos',{limit:1000,offset:0}),
+    storage.list('produtos/otimizadas',{limit:1000,offset:0})
+  ]);
+  if(root.error||optimized.error)throw Error('Não foi possível confirmar os arquivos no Storage.');
+  const available=new Set([
+    ...(root.data||[]).filter(f=>f.id).map(f=>'produtos/'+f.name),
+    ...(optimized.data||[]).filter(f=>f.id).map(f=>'produtos/otimizadas/'+f.name)
+  ]);
+  const missing=refs.filter(path=>path.startsWith('produtos/')&&!available.has(path));
+  if(missing.length)throw Error('Há '+missing.length+' referência(s) de imagens sem arquivo. Exclusão cancelada.');
+  const old=(root.data||[]).filter(f=>/^[a-f0-9-]+\.png$/i.test(f.name)).map(f=>'produtos/'+f.name);
+  const extras=old.filter(p=>!BACKED_UP.has(p));
+  if(extras.length)throw Error('Foram encontradas imagens PNG fora do backup. Exclusão cancelada.');
+  const matching=old.filter(p=>BACKED_UP.has(p));
+  if(old.length>BACKED_UP.size)throw Error('Quantidade de PNGs fora do esperado.');
+  return {products:products.length,refs:refs.length,old:matching};
+}
+async function refresh(){
+  if(busy)return;
+  $('recheck').disabled=true;$('remove').disabled=true;
+  try{const report=await verify();candidates=report.old;
+    $('summary').textContent=report.products+' produtos conferidos. '+candidates.length+' PNGs antigos ainda podem ser removidos. Todas as referências de imagens apontam para arquivos existentes.';
+    $('remove').disabled=candidates.length===0;
+    if(candidates.length===0)log('Nenhum PNG antigo aguardando limpeza.');
+  }catch(e){log(e.message,true)}
+  finally{$('recheck').disabled=false}
+}
+$('login-form').addEventListener('submit',async e=>{
+  e.preventDefault();$('login-error').textContent='';
+  try{
+    const form=e.currentTarget;
+    const {error}=await db.auth.signInWithPassword({email:form.elements.email.value.trim(),password:form.elements.password.value});
+    form.elements.password.value='';
+    if(error)throw Error('Falha no login. Confira o acesso do painel.');
+    await admin();await refresh();
+  }catch(err){$('login-error').textContent=err.message}
+});
+$('recheck').addEventListener('click',refresh);
+$('remove').addEventListener('click',async()=>{
+  if(busy||!authorized)return;
+  if(!window.confirm('Confirmar exclusão DEFINITIVA apenas dos PNGs antigos que já possuem backup externo? As imagens JPG e WebP não serão afetadas.'))return;
+  busy=true;$('remove').disabled=true;$('recheck').disabled=true;
+  try{
+    const initial=await verify();const list=initial.old;
+    $('progress').max=Math.max(list.length,1);$('progress').value=0;
+    log('Iniciando remoção de '+list.length+' PNGs conferidos.');
+    let done=0;
+    for(let i=0;i<list.length;i+=25){
+      // Revalidar as referências antes de cada lote, protegendo edições simultâneas.
+      const latest=await verify();
+      const current=new Set(latest.old);
+      const batch=list.slice(i,i+25).filter(p=>current.has(p));
+      if(batch.length){
+        const {error}=await storage.remove(batch);
+        if(error)throw Error('O Storage recusou a exclusão: '+error.message);
+      }
+      done+=batch.length;
+      $('progress').value=Math.min(i+25,list.length);
+      log(done+' de '+list.length+' PNGs excluídos.');
+    }
+    const check=await verify();
+    if(check.old.length)throw Error('Ainda restam '+check.old.length+' PNGs; confira o registro.');
+    log('Concluído! PNGs antigos removidos. As versões JPEG/WebP continuam no catálogo.');
+    $('summary').textContent='Limpeza concluída. Nenhum PNG antigo restante.';
+  }catch(err){log('Interrompido: '+err.message,true)}
+  finally{busy=false;$('recheck').disabled=false;await refresh()}
+});
+(async()=>{try{if(db)await admin();await refresh()}catch{}})();
+});
+</script>
+</body>
+</html>
